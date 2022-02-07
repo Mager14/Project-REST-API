@@ -1,4 +1,4 @@
-module altera-immersive-program-ademawan/Project-REST-API
+module Project-REST-API
 
 go 1.17
 

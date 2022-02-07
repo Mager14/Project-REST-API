@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"altera-immersive-program-ademawan/Project-REST-API/configs"
-	"altera-immersive-program-ademawan/Project-REST-API/entities"
+	"Project-REST-API/configs"
+	"Project-REST-API/entities"
 	"fmt"
 
 	"github.com/labstack/gommon/log"
