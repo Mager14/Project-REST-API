@@ -35,12 +35,20 @@ func (ur *UserRepository) GetById(userId int) (entities.User, error) {
 	return arrUser, nil
 }
 
-func (ur *UserRepository) Insert(u entities.User) (entities.User, error) {
+func (ur *UserRepository) UserRegister(u entities.User) (entities.User, error) {
 	if err := ur.database.Create(&u).Error; err != nil {
 		return u, err
 	}
 
 	return u, nil
+}
+func (ur *UserRepository) Login(u entities.User) (entities.User, error) {
+	var user entities.User
+	if err := ur.database.Where("email= ? AND password= ?", u.Email, u.Password).First(&user).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
 }
 func (ur *UserRepository) Update(userId int, newUser entities.User) (entities.User, error) {
 
@@ -57,9 +65,10 @@ func (ur *UserRepository) Delete(userId int) error {
 
 	var user entities.User
 
-	if err := ur.database.Delete(&user, userId).Error; err != nil {
+	if err := ur.database.First(&user, userId).Error; err != nil {
 		return err
 	}
-
+	ur.database.Delete(&user, userId)
 	return nil
+
 }

@@ -45,7 +45,7 @@ func (uc *UserController) GetById() echo.HandlerFunc {
 	}
 }
 
-func (uc *UserController) Insert() echo.HandlerFunc {
+func (uc *UserController) UserRegister() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := RegisterRequestFormat{}
 
@@ -53,10 +53,27 @@ func (uc *UserController) Insert() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
-		res, err := uc.repo.Insert(entities.User{Nama: user.Nama, Email: user.Email, Password: user.Password})
+		res, err := uc.repo.UserRegister(entities.User{Nama: user.Nama, Email: user.Email, Password: user.Password})
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
+		}
+
+		return c.JSON(http.StatusCreated, common.Success(http.StatusCreated, "Success Create User", res))
+	}
+}
+func (uc *UserController) Login() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		user := LoginRequest{}
+
+		if err := c.Bind(&user); err != nil {
+			return c.JSON(http.StatusBadRequest, common.BadRequest())
+		}
+
+		res, err := uc.repo.Login(entities.User{Email: user.Email, Password: user.Password})
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
 		return c.JSON(http.StatusCreated, common.Success(http.StatusCreated, "Success Create User", res))

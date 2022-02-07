@@ -6,6 +6,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type LoginRequest struct {
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
+}
+
 type RegisterRequestFormat struct {
 	Nama     string `json:"nama" form:"name"`
 	Email    string `json:"email" form:"email"`
