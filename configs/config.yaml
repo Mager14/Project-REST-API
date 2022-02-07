@@ -1,8 +1,0 @@
-Port: 8000
-Database:
-  Port: 3306
-  Driver: "mysql"
-  Name: "be6group_db"
-  Address: "127.0.0.1"
-  Username: "root"
-  Password: "adol1122"
