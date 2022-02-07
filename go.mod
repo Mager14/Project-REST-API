@@ -3,6 +3,7 @@ module Project-REST-API
 go 1.17
 
 require (
+	github.com/labstack/echo/v4 v4.6.3
 	github.com/labstack/gommon v0.3.1
 	github.com/spf13/viper v1.10.1
 	gorm.io/driver/mysql v1.2.3
@@ -27,6 +28,8 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
+	golang.org/x/crypto v0.0.0-20211108221036-ceb1ce70b4fa // indirect
+	golang.org/x/net v0.0.0-20210913180222-943fd674d43e // indirect
 	golang.org/x/sys v0.0.0-20220204135822-1c1b9b1eba6a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.66.3 // indirect
