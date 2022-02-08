@@ -28,7 +28,7 @@ func (tc *TaskController) Get() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, common.InternalServerError())
 		}
 
-		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Get All User", res))
+		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Get All Task", res))
 	}
 }
 
@@ -42,7 +42,7 @@ func (tc *TaskController) GetById() echo.HandlerFunc {
 			return c.JSON(http.StatusNotFound, common.NotFound(http.StatusNotFound, "not found", nil))
 		}
 
-		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Get User", res))
+		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Get Taks", res))
 	}
 }
 
@@ -60,26 +60,26 @@ func (tc *TaskController) TaskRegister() echo.HandlerFunc {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
 		}
 
-		return c.JSON(http.StatusCreated, common.Success(http.StatusCreated, "Success Create User", res))
+		return c.JSON(http.StatusCreated, common.Success(http.StatusCreated, "Success Create Task", res))
 	}
 }
 
 func (uc *TaskController) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var newUser = UpdateRequestFormat{}
+		var newTask = UpdateRequestFormat{}
 		taskId, _ := strconv.Atoi(c.Param("id"))
 
-		if err := c.Bind(&newUser); err != nil {
+		if err := c.Bind(&newTask); err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
-		res, err := uc.repo.Update(taskId, entities.Task{Nama: newUser.Nama})
+		res, err := uc.repo.Update(taskId, entities.Task{Nama: newTask.Nama})
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
 		}
 
-		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Update User", res))
+		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Update Task", res))
 	}
 }
 
@@ -93,6 +93,6 @@ func (uc *TaskController) Delete() echo.HandlerFunc {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
 		}
 
-		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Delete User", nil))
+		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Delete Task", nil))
 	}
 }
