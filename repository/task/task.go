@@ -36,12 +36,12 @@ func (ur *TaskRepository) GetById(taskId int) (entities.Task, error) {
 	return arrTask, nil
 }
 
-func (ur *TaskRepository) TaskRegister(u entities.Task) (entities.Task, error) {
-	if err := ur.database.Create(&u).Error; err != nil {
-		return u, err
+func (ur *TaskRepository) TaskRegister(t entities.Task) (entities.Task, error) {
+	if err := ur.database.Create(&t).Error; err != nil {
+		return t, err
 	}
 
-	return u, nil
+	return t, nil
 }
 
 func (ur *TaskRepository) Update(taskId int, newTask entities.Task) (entities.Task, error) {

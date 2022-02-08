@@ -64,7 +64,7 @@ func (tc *TaskController) TaskRegister() echo.HandlerFunc {
 	}
 }
 
-func (uc *TaskController) Update() echo.HandlerFunc {
+func (tc *TaskController) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var newUser = UpdateRequestFormat{}
 		taskId, _ := strconv.Atoi(c.Param("id"))
@@ -73,7 +73,7 @@ func (uc *TaskController) Update() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
-		res, err := uc.repo.Update(taskId, entities.Task{Nama: newUser.Nama})
+		res, err := tc.repo.Update(taskId, entities.Task{Nama: newUser.Nama})
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
@@ -83,16 +83,16 @@ func (uc *TaskController) Update() echo.HandlerFunc {
 	}
 }
 
-func (uc *TaskController) Delete() echo.HandlerFunc {
+func (tc *TaskController) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		taskId, _ := strconv.Atoi(c.Param("id"))
 
-		err := uc.repo.Delete(taskId)
+		err := tc.repo.Delete(taskId)
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
 		}
 
-		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Delete User", nil))
+		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Delete Task", nil))
 	}
 }
