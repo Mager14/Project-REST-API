@@ -14,7 +14,7 @@ import (
 
 func TestGet(t *testing.T) {
 
-	t.Run("UserGet", func(t *testing.T) {
+	t.Run("ErrorGetUser", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
@@ -30,7 +30,7 @@ func TestGet(t *testing.T) {
 		assert.Equal(t, response.Data[0].Nama, "Adlan")
 		//
 	})
-	t.Run("GetUser", func(t *testing.T) {
+	t.Run("ErrorGetUser", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
@@ -84,7 +84,7 @@ func TestGetById(t *testing.T) {
 		assert.Equal(t, "Adlan", response.Data.Nama)
 
 	})
-	t.Run("Eror GetById", func(t *testing.T) {
+	t.Run("ErorGetById", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
@@ -124,7 +124,7 @@ func TestUserRegister(t *testing.T) {
 		assert.Equal(t, "adlan123", response.Data.Password)
 
 	})
-	t.Run("Eror UserRegister", func(t *testing.T) {
+	t.Run("ErorUserRegister", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
 		res := httptest.NewRecorder()
@@ -144,6 +144,7 @@ func TestUserRegister(t *testing.T) {
 	})
 
 }
+
 func TestUpdate(t *testing.T) {
 	t.Run("Update", func(t *testing.T) {
 		e := echo.New()
@@ -163,9 +164,29 @@ func TestUpdate(t *testing.T) {
 		assert.Equal(t, "Adlan", response.Data.Nama)
 
 	})
+
+	t.Run("ErrorUpdate", func(t *testing.T) {
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodPut, "/", nil)
+		res := httptest.NewRecorder()
+		context := e.NewContext(req, res)
+		context.SetPath("/users/:id")
+
+		userController := New(&MockFalseUserRepository{})
+		userController.Update()(context)
+
+		response := UpdateResponseFormat{}
+
+		json.Unmarshal([]byte(res.Body.Bytes()), &response)
+
+		assert.Equal(t, 500, response.Code)
+		assert.Equal(t, "There is some error on server", response.Message)
+
+	})
 }
+
 func TestDelete(t *testing.T) {
-	t.Run("UserRegister", func(t *testing.T) {
+	t.Run("DeleteUser", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		res := httptest.NewRecorder()
@@ -181,6 +202,65 @@ func TestDelete(t *testing.T) {
 
 		assert.Equal(t, 200, response.Code)
 		assert.Equal(t, nil, response.Data)
+
+	})
+
+	t.Run("ErrorDeleteUser", func(t *testing.T) {
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodDelete, "/", nil)
+		res := httptest.NewRecorder()
+		context := e.NewContext(req, res)
+		context.SetPath("/users/:id")
+
+		userController := New(&MockFalseUserRepository{})
+		userController.Delete()(context)
+
+		response := DeleteResponseFormat{}
+
+		json.Unmarshal([]byte(res.Body.Bytes()), &response)
+
+		assert.Equal(t, 500, response.Code)
+		assert.Equal(t, "There is some error on server", response.Message)
+
+	})
+}
+
+func TestLogin(t *testing.T) {
+	t.Run("UserLogin", func(t *testing.T) {
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		res := httptest.NewRecorder()
+		context := e.NewContext(req, res)
+		context.SetPath("/users/login")
+
+		userController := New(&MockUserRepository{})
+		userController.Login()(context)
+
+		response := UserLoginResponseFormat{}
+
+		json.Unmarshal([]byte(res.Body.Bytes()), &response)
+
+		assert.Equal(t, 200, response.Code)
+		assert.Equal(t, "adlan@adlan.com", response.Data.Email)
+
+	})
+
+	t.Run("ErrorLogin", func(t *testing.T) {
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		res := httptest.NewRecorder()
+		context := e.NewContext(req, res)
+		context.SetPath("/users/login")
+
+		userController := New(&MockFalseUserRepository{})
+		userController.Login()(context)
+
+		response := UserLoginResponseFormat{}
+
+		json.Unmarshal([]byte(res.Body.Bytes()), &response)
+
+		assert.Equal(t, 400, response.Code)
+		assert.Equal(t, "There is some problem from input", response.Message)
 
 	})
 }

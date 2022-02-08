@@ -1,28 +1,28 @@
-package user
+package task
 
 import (
 	"Project-REST-API/delivery/controllers/common"
 	"Project-REST-API/entities"
-	"Project-REST-API/repository/user"
+	"Project-REST-API/repository/task"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
-type UserController struct {
-	repo user.User
+type TaskController struct {
+	repo task.Task
 }
 
-func New(repository user.User) *UserController {
-	return &UserController{
+func New(repository task.Task) *TaskController {
+	return &TaskController{
 		repo: repository,
 	}
 }
 
-func (uc *UserController) Get() echo.HandlerFunc {
+func (tc *TaskController) Get() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		res, err := uc.repo.Get()
+		res, err := tc.repo.Get()
 
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, common.InternalServerError())
@@ -32,11 +32,11 @@ func (uc *UserController) Get() echo.HandlerFunc {
 	}
 }
 
-func (uc *UserController) GetById() echo.HandlerFunc {
+func (tc *TaskController) GetById() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userId, _ := strconv.Atoi(c.Param("id"))
+		taskId, _ := strconv.Atoi(c.Param("id"))
 
-		res, err := uc.repo.GetById(userId)
+		res, err := tc.repo.GetById(taskId)
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.NotFound(http.StatusNotFound, "not found", nil))
@@ -46,15 +46,15 @@ func (uc *UserController) GetById() echo.HandlerFunc {
 	}
 }
 
-func (uc *UserController) UserRegister() echo.HandlerFunc {
+func (tc *TaskController) TaskRegister() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		user := RegisterRequestFormat{}
+		task := RegisterRequestFormat{}
 
-		if err := c.Bind(&user); err != nil {
+		if err := c.Bind(&task); err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
-		res, err := uc.repo.UserRegister(entities.User{Nama: user.Nama, Email: user.Email, Password: user.Password})
+		res, err := tc.repo.TaskRegister(entities.Task{Nama: task.Nama})
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
@@ -64,34 +64,16 @@ func (uc *UserController) UserRegister() echo.HandlerFunc {
 	}
 }
 
-func (uc *UserController) Login() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		user := LoginRequest{}
-
-		if err := c.Bind(&user); err != nil {
-			return c.JSON(http.StatusBadRequest, common.BadRequest())
-		}
-
-		res, err := uc.repo.Login(entities.User{Email: user.Email, Password: user.Password})
-
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, common.BadRequest())
-		}
-
-		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Create User", res))
-	}
-}
-
-func (uc *UserController) Update() echo.HandlerFunc {
+func (uc *TaskController) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var newUser = UpdateRequestFormat{}
-		userId, _ := strconv.Atoi(c.Param("id"))
+		taskId, _ := strconv.Atoi(c.Param("id"))
 
 		if err := c.Bind(&newUser); err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
-		res, err := uc.repo.Update(userId, entities.User{Nama: newUser.Nama, Email: newUser.Email, Password: newUser.Password})
+		res, err := uc.repo.Update(taskId, entities.User{Nama: newUser.Nama, Email: newUser.Email, Password: newUser.Password})
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
@@ -101,11 +83,11 @@ func (uc *UserController) Update() echo.HandlerFunc {
 	}
 }
 
-func (uc *UserController) Delete() echo.HandlerFunc {
+func (uc *TaskController) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userId, _ := strconv.Atoi(c.Param("id"))
+		taskId, _ := strconv.Atoi(c.Param("id"))
 
-		err := uc.repo.Delete(userId)
+		err := uc.repo.Delete(taskId)
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())

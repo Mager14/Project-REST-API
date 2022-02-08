@@ -1,4 +1,4 @@
-package user
+package task
 
 import (
 	"Project-REST-API/entities"
@@ -6,39 +6,28 @@ import (
 	"gorm.io/gorm"
 )
 
-type LoginRequest struct {
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
-}
-
-type UserLoginResponseFormat struct {
-	Code    int           `json:"code"`
-	Message string        `json:"message"`
-	Data    entities.User `json:"data"`
-}
-
 type RegisterRequestFormat struct {
 	Nama     string `json:"nama" form:"name"`
 	Email    string `json:"email" form:"email"`
 	Password string `json:"password" form:"password"`
 }
 
-type RegisterUserResponseFormat struct {
+type RegisterTaskResponseFormat struct {
 	Code    int           `json:"code"`
 	Message string        `json:"message"`
-	Data    entities.User `json:"data"`
+	Data    entities.Task `json:"data"`
 }
 
-type GetUsersResponseFormat struct {
+type GetTasksResponseFormat struct {
 	Code    int             `json:"code"`
 	Message string          `json:"message"`
-	Data    []entities.User `json:"data"`
+	Data    []entities.Task `json:"data"`
 }
 
-type GetUserResponseFormat struct {
+type GetTaskResponseFormat struct {
 	Code    int           `json:"code"`
 	Message string        `json:"message"`
-	Data    entities.User `json:"data"`
+	Data    entities.Task `json:"data"`
 }
 
 type UpdateRequestFormat struct {
@@ -51,7 +40,7 @@ type UpdateRequestFormat struct {
 type UpdateResponseFormat struct {
 	Code    int           `json:"code"`
 	Message string        `json:"message"`
-	Data    entities.User `json:"data"`
+	Data    entities.Task `json:"data"`
 }
 
 type DeleteResponseFormat struct {
