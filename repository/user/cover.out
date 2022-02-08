@@ -1,0 +1,20 @@
+mode: set
+Project-REST-API/repository/user/user.go:13.39,17.2 1 1
+Project-REST-API/repository/user/user.go:19.58,22.57 2 1
+Project-REST-API/repository/user/user.go:26.2,26.21 1 1
+Project-REST-API/repository/user/user.go:22.57,24.3 1 1
+Project-REST-API/repository/user/user.go:28.70,31.66 2 1
+Project-REST-API/repository/user/user.go:35.2,35.21 1 1
+Project-REST-API/repository/user/user.go:31.66,33.3 1 1
+Project-REST-API/repository/user/user.go:38.80,39.53 1 1
+Project-REST-API/repository/user/user.go:43.2,43.15 1 1
+Project-REST-API/repository/user/user.go:39.53,41.3 1 1
+Project-REST-API/repository/user/user.go:45.73,47.110 2 0
+Project-REST-API/repository/user/user.go:51.2,51.18 1 0
+Project-REST-API/repository/user/user.go:47.110,49.3 1 0
+Project-REST-API/repository/user/user.go:53.92,58.73 3 1
+Project-REST-API/repository/user/user.go:62.2,62.18 1 1
+Project-REST-API/repository/user/user.go:58.73,60.3 1 1
+Project-REST-API/repository/user/user.go:64.52,68.63 2 1
+Project-REST-API/repository/user/user.go:71.2,72.12 2 1
+Project-REST-API/repository/user/user.go:68.63,70.3 1 1
