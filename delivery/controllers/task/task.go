@@ -73,7 +73,7 @@ func (uc *TaskController) Update() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
-		res, err := uc.repo.Update(taskId, entities.User{Nama: newUser.Nama, Email: newUser.Email, Password: newUser.Password})
+		res, err := uc.repo.Update(taskId, entities.Task{Nama: newUser.Nama})
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())

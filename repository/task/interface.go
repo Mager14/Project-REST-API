@@ -8,5 +8,4 @@ type Task interface {
 	TaskRegister(newTask entities.Task) (entities.Task, error)
 	Update(taskId int, newTask entities.Task) (entities.Task, error)
 	Delete(taskId int) error
-	Login(data entities.Task) (entities.Task, error)
 }
