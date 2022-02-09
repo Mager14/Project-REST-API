@@ -23,13 +23,13 @@ func TestGet(t *testing.T) {
 		context := e.NewContext(req, res)
 		context.SetPath("/users")
 
-		userController := New(MockUserRepository{})
-		userController.Get()(context)
+		taskController := New(MockTaskRepository{})
+		taskController.Get()(context)
 
-		var response GetUsersResponseFormat
+		var response GetTasksResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
-		assert.Equal(t, "Adlan", response.Data[0].Nama)
+		assert.Equal(t, "Taskku", response.Data[0].Nama)
 		//
 	})
 	t.Run("ErrorGetUser", func(t *testing.T) {
@@ -40,10 +40,10 @@ func TestGet(t *testing.T) {
 		context := e.NewContext(req, res)
 		context.SetPath("/users")
 
-		falseUserController := New(MockFalseUserRepository{})
-		falseUserController.Get()(context)
+		falsetaskController := New(MockFalseTaskRepository{})
+		falsetaskController.Get()(context)
 
-		var response GetUserResponseFormat
+		var response GetTaskResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 		assert.Equal(t, response.Message, "There is some error on server")
@@ -59,15 +59,15 @@ func TestGetById(t *testing.T) {
 		context := e.NewContext(req, res)
 		context.SetPath("/users/:id")
 
-		userController := New(&MockUserRepository{})
-		userController.GetById()(context)
+		taskController := New(&MockTaskRepository{})
+		taskController.GetById()(context)
 
-		response := GetUserResponseFormat{}
+		response := GetTaskResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		assert.Equal(t, 200, response.Code)
-		assert.Equal(t, "Adlan", response.Data.Nama)
+		assert.Equal(t, "Taskku", response.Data.Nama)
 
 	})
 	t.Run("ErorGetById", func(t *testing.T) {
@@ -78,10 +78,10 @@ func TestGetById(t *testing.T) {
 		context := e.NewContext(req, res)
 		context.SetPath("/users/:id")
 
-		falseUserController := New(MockFalseUserRepository{})
-		falseUserController.GetById()(context)
+		falsetaskController := New(MockFalseTaskRepository{})
+		falsetaskController.GetById()(context)
 
-		var response GetUserResponseFormat
+		var response GetTaskResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 		assert.Equal(t, response.Message, "not found")
@@ -89,42 +89,43 @@ func TestGetById(t *testing.T) {
 
 }
 
-func TestUserRegister(t *testing.T) {
-	t.Run("UserRegister", func(t *testing.T) {
+func TestTaskRegister(t *testing.T) {
+	t.Run("TaskRegister", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"name":     "Adlan",
-			"email":    "adlan@adlan.com",
-			"password": "adlan123",
+			"nama":       "Taskku",
+			"priority":   1,
+			"user_ID":    1,
+			"project_ID": 1,
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/users")
+		context.SetPath("/task/register")
 
-		userController := New(MockUserRepository{})
-		userController.UserRegister()(context)
+		taskController := New(MockTaskRepository{})
+		taskController.TaskRegister()(context)
 
-		response := RegisterUserResponseFormat{}
+		response := RegisterTaskResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		// assert.Equal(t, 201, response.Code)
-		assert.Equal(t, "Adlan", response.Data.Nama)
+		assert.Equal(t, "Taskku", response.Data.Nama)
 
 	})
-	t.Run("ErorUserRegister", func(t *testing.T) {
+	t.Run("ErorTaskRegister", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/users")
+		context.SetPath("/tasks/register")
 
-		userController := New(&MockFalseUserRepository{})
-		userController.UserRegister()(context)
+		userController := New(MockFalseTaskRepository{})
+		userController.TaskRegister()(context)
 
-		response := RegisterUserResponseFormat{}
+		response := RegisterTaskResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
@@ -133,24 +134,25 @@ func TestUserRegister(t *testing.T) {
 
 	})
 
-	t.Run("UserRegisterBind", func(t *testing.T) {
+	t.Run("TaskRegisterBind", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"nama":     "Adlan",
-			"email":    "adlan@adlan.com",
-			"password": 1,
+			"nama":       "Taskku",
+			"priority":   1,
+			"user_ID":    1,
+			"project_ID": "test",
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		fmt.Println(req)
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/users")
+		context.SetPath("/tasks/register")
 
-		userController := New(MockUserRepository{})
-		userController.UserRegister()(context)
+		userController := New(MockFalseTaskRepository{})
+		userController.TaskRegister()(context)
 
-		response := RegisterUserResponseFormat{}
+		response := RegisterTaskResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
@@ -234,15 +236,15 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	t.Run("DeleteUser", func(t *testing.T) {
+	t.Run("DeleteTask", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/users/:id")
+		context.SetPath("/tasks/:id")
 
-		userController := New(&MockUserRepository{})
-		userController.Delete()(context)
+		taskController := New(&MockTaskRepository{})
+		taskController.Delete()(context)
 
 		response := DeleteResponseFormat{}
 
@@ -253,14 +255,14 @@ func TestDelete(t *testing.T) {
 
 	})
 
-	t.Run("ErrorDeleteUser", func(t *testing.T) {
+	t.Run("ErrorDeleteTask", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/users/:id")
+		context.SetPath("/tasks/:id")
 
-		userController := New(&MockFalseUserRepository{})
+		userController := New(&MockFalseTaskRepository{})
 		userController.Delete()(context)
 
 		response := DeleteResponseFormat{}
@@ -277,20 +279,20 @@ type MockTaskRepository struct{}
 
 func (m MockTaskRepository) Get() ([]entities.Task, error) {
 	return []entities.Task{
-		{Nama: "Taskku", Priority: 12, User_ID: 1, Project_ID: 1},
+		{Nama: "Taskku", Priority: 1, User_ID: 1, Project_ID: 1},
 	}, nil
 }
 
 func (m MockTaskRepository) GetById(taskId int) (entities.Task, error) {
-	return entities.Task{Nama: "Taskku", Priority: 12, User_ID: 1, Project_ID: 1}, nil
+	return entities.Task{Nama: "Taskku", Priority: 1, User_ID: 1, Project_ID: 1}, nil
 }
 
 func (m MockTaskRepository) TaskRegister(newTask entities.Task) (entities.Task, error) {
-	return entities.Task{Nama: "Taskku", Priority: 12, User_ID: 1, Project_ID: 1}, nil
+	return entities.Task{Nama: "Taskku", Priority: 1, User_ID: 1, Project_ID: 1}, nil
 }
 
 func (m MockTaskRepository) Update(taskId int, newTask entities.Task) (entities.Task, error) {
-	return entities.Task{Nama: "Taskku", Priority: 12, User_ID: 1, Project_ID: 1}, nil
+	return entities.Task{Nama: "Taskku", Priority: 1, User_ID: 1, Project_ID: 1}, nil
 }
 
 func (m MockTaskRepository) Delete(taskId int) error {
