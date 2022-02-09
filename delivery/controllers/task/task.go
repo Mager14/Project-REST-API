@@ -73,7 +73,7 @@ func (tc *TaskController) Update() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
-		res, err := tc.repo.Update(taskId, entities.Task{Nama: newTask.Nama})
+		res, err := tc.repo.Update(taskId, entities.Task{Nama: newTask.Nama, Priority: newTask.Priority})
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
