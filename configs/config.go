@@ -35,7 +35,7 @@ func GetConfig() *AppConfig {
 
 func initConfig() *AppConfig {
 	var defaultConfig AppConfig
-	defaultConfig.Port = 6969
+	defaultConfig.Port = 8000
 	defaultConfig.Database.Driver = "mysql"
 	defaultConfig.Database.Name = "test"
 	defaultConfig.Database.Address = "localhost"

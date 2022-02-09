@@ -1,4 +1,4 @@
-package user
+package task
 
 import (
 	"Project-REST-API/entities"
@@ -271,77 +271,6 @@ func TestDelete(t *testing.T) {
 	})
 }
 
-func TestLogin(t *testing.T) {
-	t.Run("UserLogin", func(t *testing.T) {
-		e := echo.New()
-
-		requestBody, _ := json.Marshal(map[string]interface{}{
-			"email":    "adlan@adlan.com",
-			"password": "adlan123",
-		})
-		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
-		res := httptest.NewRecorder()
-		req.Header.Set("Content-Type", "application/json")
-		
-		context := e.NewContext(req, res)
-		context.SetPath("/users/login")
-
-		userController := New(MockUserRepository{})
-		userController.Login()(context)
-
-		response := UserLoginResponseFormat{}
-
-		json.Unmarshal([]byte(res.Body.Bytes()), &response)
-
-		assert.Equal(t, 200, response.Code)
-		assert.Equal(t, "adlan@adlan.com", response.Data.Email)
-
-	})
-
-	t.Run("ErrorLogin", func(t *testing.T) {
-		e := echo.New()
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
-		res := httptest.NewRecorder()
-		context := e.NewContext(req, res)
-		context.SetPath("/users/login")
-
-		userController := New(&MockFalseUserRepository{})
-		userController.Login()(context)
-
-		response := UserLoginResponseFormat{}
-
-		json.Unmarshal([]byte(res.Body.Bytes()), &response)
-
-		assert.Equal(t, 400, response.Code)
-		assert.Equal(t, "There is some problem from input", response.Message)
-
-	})
-
-	t.Run("UserLoginBind", func(t *testing.T) {
-		e := echo.New()
-
-		requestBody, _ := json.Marshal(map[string]interface{}{
-			"email":    "adlan@adlan.com",
-			"password": 123,
-		})
-		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
-		res := httptest.NewRecorder()
-		req.Header.Set("Content-Type", "application/json")
-		
-		context := e.NewContext(req, res)
-		context.SetPath("/users/login")
-
-		userController := New(MockUserRepository{})
-		userController.Login()(context)
-
-		response := UserLoginResponseFormat{}
-
-		json.Unmarshal([]byte(res.Body.Bytes()), &response)
-
-		assert.Equal(t, 400, response.Code)
-
-	})
-}
 
 type MockUserRepository struct{}
 
@@ -357,10 +286,6 @@ func (m MockUserRepository) GetById(userId int) (entities.User, error) {
 
 func (m MockUserRepository) UserRegister(newUser entities.User) (entities.User, error) {
 	return entities.User{Nama: "Adlan", Email: "adlan@adlan.com", Password: "adlan123"}, nil
-}
-
-func (m MockUserRepository) Login(data entities.User) (entities.User, error) {
-	return entities.User{Email: "adlan@adlan.com", Password: "adlan123"}, nil
 }
 
 func (m MockUserRepository) Update(userId int, newUser entities.User) (entities.User, error) {
@@ -381,9 +306,6 @@ func (m MockFalseUserRepository) GetById(userId int) (entities.User, error) {
 }
 func (m MockFalseUserRepository) UserRegister(newUser entities.User) (entities.User, error) {
 	return entities.User{}, errors.New("False Register Object")
-}
-func (m MockFalseUserRepository) Login(data entities.User) (entities.User, error) {
-	return entities.User{}, errors.New("False Login Object")
 }
 func (m MockFalseUserRepository) Update(userId int, newUser entities.User) (entities.User, error) {
 	return entities.User{}, errors.New("False Update Object")
