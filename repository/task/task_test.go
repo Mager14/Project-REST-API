@@ -91,22 +91,22 @@ func TestUpdate(t *testing.T) {
 
 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.User{})
-	db.AutoMigrate(&entities.User{})
+	db.Migrator().DropTable(&entities.Task{})
+	db.AutoMigrate(&entities.Task{})
 
 	repo := New(db)
-	mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
-	db.Create(&mockUser)
+	mockTask := entities.Task{Nama: "Task1", Priority: 12}
+	db.Create(&mockTask)
 
-	t.Run("Success Update User", func(t *testing.T) {
-		mockUpdate := entities.User{Nama: "Testerr", Email: "steven@steven.com", Password: "steven123"}
+	t.Run("Success Update Task", func(t *testing.T) {
+		mockUpdate := entities.Task{Nama: "Task1", Priority: 12}
 		res, err := repo.Update(1, mockUpdate)
 		assert.Nil(t, err)
 		assert.Equal(t, mockUpdate.Nama, res.Nama)
 	})
 
-	t.Run("Fail Update User", func(t *testing.T) {
-		mockUpdate := entities.User{Model: gorm.Model{ID: 1}, Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
+	t.Run("Fail Update Task", func(t *testing.T) {
+		mockUpdate := entities.Task{Model: gorm.Model{ID: 1}, Nama: "Task1", Priority: 12}
 		_, err := repo.Update(2, mockUpdate)
 		assert.NotNil(t, err)
 	})
@@ -117,22 +117,22 @@ func TestDelete(t *testing.T) {
 
 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.User{})
-	db.AutoMigrate(&entities.User{})
+	db.Migrator().DropTable(&entities.Task{})
+	db.AutoMigrate(&entities.Task{})
 
 	repo := New(db)
-	mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
-	db.Create(&mockUser)
+	mockTask := entities.Task{Nama: "Task1", Priority: 12}
+	db.Create(&mockTask)
 
-	t.Run("Success Deleting User ID", func(t *testing.T) {
-		err := repo.Delete(int(mockUser.ID))
+	t.Run("Success Deleting Task ID", func(t *testing.T) {
+		err := repo.Delete(int(mockTask.ID))
 		assert.Nil(t, err)
 	})
 
-	db.Migrator().DropTable(&entities.User{})
+	db.Migrator().DropTable(&entities.Task{})
 
-	t.Run("Fail Getting User ID", func(t *testing.T) {
-		err := repo.Delete(int(mockUser.ID))
+	t.Run("Fail Deleting Task ID", func(t *testing.T) {
+		err := repo.Delete(int(mockTask.ID))
 		assert.NotNil(t, err)
 	})
 }
