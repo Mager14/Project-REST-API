@@ -277,11 +277,7 @@ type MockTaskRepository struct{}
 
 func (m MockTaskRepository) Get() ([]entities.Task, error) {
 	return []entities.Task{
-<<<<<<< HEAD
 		entities.Task{Nama: "Adlan", Priority: 1, User_ID: 1, Project_ID: 1},
-=======
-		{Nama: "Adlan", Priority: 1, User_ID: 1, Project_ID: 1},
->>>>>>> 1d88556678668ab3091e7657d230ca0511dff24b
 	}, nil
 }
 
@@ -306,7 +302,6 @@ type MockFalseTaskRepository struct{}
 func (m MockFalseTaskRepository) Get() ([]entities.Task, error) {
 	return nil, errors.New("False Task Object")
 }
-<<<<<<< HEAD
 func (m MockFalseTaskRepository) GetById(taskId int) (entities.Task, error) {
 	return entities.Task{}, errors.New("False Get Object")
 }
@@ -316,21 +311,6 @@ func (m MockFalseTaskRepository) TaskRegister(newTask entities.Task) (entities.T
 func (m MockFalseTaskRepository) Update(taskId int, newTask entities.Task) (entities.Task, error) {
 	return entities.Task{}, errors.New("False Update Object")
 }
-=======
-
-func (m MockFalseTaskRepository) GetById(taskId int) (entities.Task, error) {
-	return entities.Task{}, errors.New("False Get Object")
-}
-
-func (m MockFalseTaskRepository) TaskRegister(newTask entities.Task) (entities.Task, error) {
-	return entities.Task{}, errors.New("False Register Object")
-}
-
-func (m MockFalseTaskRepository) Update(taskId int, newTask entities.Task) (entities.Task, error) {
-	return entities.Task{}, errors.New("False Update Object")
-}
-
->>>>>>> 1d88556678668ab3091e7657d230ca0511dff24b
 func (m MockFalseTaskRepository) Delete(taskId int) error {
 	return errors.New("False Delete Object")
 }
