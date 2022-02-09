@@ -21,7 +21,7 @@ func TestInsert(t *testing.T) {
 	repo := New(db)
 
 	t.Run("Success Creating Task", func(t *testing.T) {
-		mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1}
+		mockTask := entities.Task{Nama: "Steven"}
 		res, err := repo.TaskRegister(mockTask)
 		assert.Nil(t, err)
 		assert.Equal(t, 1, int(res.ID))
@@ -29,7 +29,6 @@ func TestInsert(t *testing.T) {
 
 	t.Run("Fail Creating Task", func(t *testing.T) {
 		mockTask := entities.Task{Model: gorm.Model{ID: 1}, Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1}
-
 		_, err := repo.TaskRegister(mockTask)
 		assert.NotNil(t, err)
 	})
