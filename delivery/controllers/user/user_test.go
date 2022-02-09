@@ -179,9 +179,15 @@ func TestUserRegister(t *testing.T) {
 func TestUpdate(t *testing.T) {
 	t.Run("Update", func(t *testing.T) {
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodPut, "/", nil)
-		res := httptest.NewRecorder()
+		requestBody, _ := json.Marshal(map[string]interface{}{
+			"nama":     "Adlan",
+			"email":    "adlan@adlan.com",
+			"password": "adlan123",
+		})
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 
+		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
 		context.SetPath("/users/:id")
 
@@ -213,6 +219,30 @@ func TestUpdate(t *testing.T) {
 
 		assert.Equal(t, 500, response.Code)
 		assert.Equal(t, "There is some error on server", response.Message)
+
+	})
+	t.Run("UpdateBind", func(t *testing.T) {
+		e := echo.New()
+		requestBody, _ := json.Marshal(map[string]interface{}{
+			"nama":     "Adlan",
+			"email":    "adlan@adlan.com",
+			"password": 123,
+		})
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
+
+		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		context := e.NewContext(req, res)
+		context.SetPath("/users/:id")
+
+		userController := New(&MockUserRepository{})
+		userController.Update()(context)
+
+		response := UpdateResponseFormat{}
+
+		json.Unmarshal([]byte(res.Body.Bytes()), &response)
+
+		assert.Equal(t, 400, response.Code)
 
 	})
 }
@@ -260,12 +290,19 @@ func TestDelete(t *testing.T) {
 func TestLogin(t *testing.T) {
 	t.Run("UserLogin", func(t *testing.T) {
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
+
+		requestBody, _ := json.Marshal(map[string]interface{}{
+			"email":    "adlan@adlan.com",
+			"password": "adlan123",
+		})
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		
 		context := e.NewContext(req, res)
 		context.SetPath("/users/login")
 
-		userController := New(&MockUserRepository{})
+		userController := New(MockUserRepository{})
 		userController.Login()(context)
 
 		response := UserLoginResponseFormat{}
@@ -293,6 +330,31 @@ func TestLogin(t *testing.T) {
 
 		assert.Equal(t, 400, response.Code)
 		assert.Equal(t, "There is some problem from input", response.Message)
+
+	})
+
+	t.Run("UserLoginBind", func(t *testing.T) {
+		e := echo.New()
+
+		requestBody, _ := json.Marshal(map[string]interface{}{
+			"email":    "adlan@adlan.com",
+			"password": 123,
+		})
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
+		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		
+		context := e.NewContext(req, res)
+		context.SetPath("/users/login")
+
+		userController := New(MockUserRepository{})
+		userController.Login()(context)
+
+		response := UserLoginResponseFormat{}
+
+		json.Unmarshal([]byte(res.Body.Bytes()), &response)
+
+		assert.Equal(t, 400, response.Code)
 
 	})
 }
