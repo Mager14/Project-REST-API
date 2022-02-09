@@ -48,13 +48,13 @@ func (tc *TaskController) GetById() echo.HandlerFunc {
 
 func (tc *TaskController) TaskRegister() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		task := RegisterRequestFormat{}
+		task := RegisterTaskRequestFormat{}
 
 		if err := c.Bind(&task); err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
-		res, err := tc.repo.TaskRegister(entities.Task{Nama: task.Nama})
+		res, err := tc.repo.TaskRegister(entities.Task{Nama: task.Nama, Priority: task.Priority, User_ID: task.User_ID, Project_ID: task.Project_ID})
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
@@ -66,7 +66,7 @@ func (tc *TaskController) TaskRegister() echo.HandlerFunc {
 
 func (tc *TaskController) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var newTask = UpdateRequestFormat{}
+		var newTask = UpdateTaskRequestFormat{}
 		taskId, _ := strconv.Atoi(c.Param("id"))
 
 		if err := c.Bind(&newTask); err != nil {

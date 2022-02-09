@@ -6,12 +6,24 @@ import (
 	"gorm.io/gorm"
 )
 
-type RegisterRequestFormat struct {
-	Nama     string `json:"nama" form:"name"`
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
+//----------------------------------------------------
+//REQUEST FORMAT
+//----------------------------------------------------
+type RegisterTaskRequestFormat struct {
+	Nama       string `json:"nama" form:"nama"`
+	Priority   int    `json:"priority" form:"priority"`
+	User_ID    int    `json:"user_id" form:"user_id"`
+	Project_ID int    `json:"project_id" form:"project_id"`
+}
+type UpdateTaskRequestFormat struct {
+	gorm.Model
+	Nama     string `json:"nama" form:"nama"`
+	Priority int    `json:"priority" form:"priority"`
 }
 
+//-----------------------------------------------------
+//RESPONSE FORMAT
+//-----------------------------------------------------
 type RegisterTaskResponseFormat struct {
 	Code    int           `json:"code"`
 	Message string        `json:"message"`
@@ -28,13 +40,6 @@ type GetTaskResponseFormat struct {
 	Code    int           `json:"code"`
 	Message string        `json:"message"`
 	Data    entities.Task `json:"data"`
-}
-
-type UpdateRequestFormat struct {
-	gorm.Model
-	Nama     string `json:"nama" form:"nama"`
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
 }
 
 type UpdateResponseFormat struct {
