@@ -23,10 +23,10 @@ func TestGet(t *testing.T) {
 		context := e.NewContext(req, res)
 		context.SetPath("/users")
 
-		userController := New(MockUserRepository{})
-		userController.Get()(context)
+		taskController := New(MockTaskRepository{})
+		taskController.Get()(context)
 
-		var response GetUsersResponseFormat
+		var response GetTasksResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 		assert.Equal(t, "Adlan", response.Data[0].Nama)
@@ -40,10 +40,10 @@ func TestGet(t *testing.T) {
 		context := e.NewContext(req, res)
 		context.SetPath("/users")
 
-		falseUserController := New(MockFalseUserRepository{})
-		falseUserController.Get()(context)
+		falsetaskController := New(MockFalseTaskRepository{})
+		falsetaskController.Get()(context)
 
-		var response GetUserResponseFormat
+		var response GetTaskResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 		assert.Equal(t, response.Message, "There is some error on server")
@@ -59,10 +59,10 @@ func TestGetById(t *testing.T) {
 		context := e.NewContext(req, res)
 		context.SetPath("/users/:id")
 
-		userController := New(&MockUserRepository{})
-		userController.GetById()(context)
+		taskController := New(&MockTaskRepository{})
+		taskController.GetById()(context)
 
-		response := GetUserResponseFormat{}
+		response := GetTaskResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
@@ -78,10 +78,10 @@ func TestGetById(t *testing.T) {
 		context := e.NewContext(req, res)
 		context.SetPath("/users/:id")
 
-		falseUserController := New(MockFalseUserRepository{})
-		falseUserController.GetById()(context)
+		falsetaskController := New(MockFalseTaskRepository{})
+		falsetaskController.GetById()(context)
 
-		var response GetUserResponseFormat
+		var response GetTaskResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 		assert.Equal(t, response.Message, "not found")
@@ -271,45 +271,48 @@ func TestDelete(t *testing.T) {
 	})
 }
 
+type MockTaskRepository struct{}
 
-type MockUserRepository struct{}
-
-func (m MockUserRepository) Get() ([]entities.User, error) {
-	return []entities.User{
-		{Nama: "Adlan", Email: "adlan@adlan.com", Password: "adlan123"},
+func (m MockTaskRepository) Get() ([]entities.Task, error) {
+	return []entities.Task{
+		{Nama: "Adlan", Priority: 1, User_ID: 1, Project_ID: 1},
 	}, nil
 }
 
-func (m MockUserRepository) GetById(userId int) (entities.User, error) {
-	return entities.User{Nama: "Adlan", Email: "adlan@adlan.com", Password: "adlan123"}, nil
+func (m MockTaskRepository) GetById(taskId int) (entities.Task, error) {
+	return entities.Task{Nama: "Adlan", Priority: 1, User_ID: 1, Project_ID: 1}, nil
 }
 
-func (m MockUserRepository) UserRegister(newUser entities.User) (entities.User, error) {
-	return entities.User{Nama: "Adlan", Email: "adlan@adlan.com", Password: "adlan123"}, nil
+func (m MockTaskRepository) TaskRegister(newTask entities.Task) (entities.Task, error) {
+	return entities.Task{Nama: "Adlan", Priority: 1, User_ID: 1, Project_ID: 1}, nil
 }
 
-func (m MockUserRepository) Update(userId int, newUser entities.User) (entities.User, error) {
-	return entities.User{Nama: "Adlan", Email: "adlan@adlan.com", Password: "adlan123"}, nil
+func (m MockTaskRepository) Update(taskId int, newTask entities.Task) (entities.Task, error) {
+	return entities.Task{Nama: "Adlan", Priority: 1, User_ID: 1, Project_ID: 1}, nil
 }
 
-func (m MockUserRepository) Delete(userId int) error {
+func (m MockTaskRepository) Delete(taskId int) error {
 	return nil
 }
 
-type MockFalseUserRepository struct{}
+type MockFalseTaskRepository struct{}
 
-func (m MockFalseUserRepository) Get() ([]entities.User, error) {
-	return nil, errors.New("False User Object")
+func (m MockFalseTaskRepository) Get() ([]entities.Task, error) {
+	return nil, errors.New("False Task Object")
 }
-func (m MockFalseUserRepository) GetById(userId int) (entities.User, error) {
-	return entities.User{}, errors.New("False Get Object")
+
+func (m MockFalseTaskRepository) GetById(taskId int) (entities.Task, error) {
+	return entities.Task{}, errors.New("False Get Object")
 }
-func (m MockFalseUserRepository) UserRegister(newUser entities.User) (entities.User, error) {
-	return entities.User{}, errors.New("False Register Object")
+
+func (m MockFalseTaskRepository) TaskRegister(newTask entities.Task) (entities.Task, error) {
+	return entities.Task{}, errors.New("False Register Object")
 }
-func (m MockFalseUserRepository) Update(userId int, newUser entities.User) (entities.User, error) {
-	return entities.User{}, errors.New("False Update Object")
+
+func (m MockFalseTaskRepository) Update(taskId int, newTask entities.Task) (entities.Task, error) {
+	return entities.Task{}, errors.New("False Update Object")
 }
-func (m MockFalseUserRepository) Delete(userId int) error {
+
+func (m MockFalseTaskRepository) Delete(taskId int) error {
 	return errors.New("False Delete Object")
 }
