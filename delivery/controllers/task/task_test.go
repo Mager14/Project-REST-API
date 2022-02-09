@@ -211,10 +211,8 @@ func TestUpdate(t *testing.T) {
 	t.Run("UpdateBind", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"nama":       "Taskku",
-			"priority":   12,
-			"user_id":    1,
-			"project_id": 1,
+			"nama":     "Taskku",
+			"priority": "12",
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 
@@ -223,8 +221,8 @@ func TestUpdate(t *testing.T) {
 		context := e.NewContext(req, res)
 		context.SetPath("/task/:id")
 
-		userController := New(&MockTaskRepository{})
-		userController.Update()(context)
+		tastController := New(&MockFalseTaskRepository{})
+		tastController.Update()(context)
 
 		response := UpdateResponseFormat{}
 

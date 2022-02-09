@@ -141,7 +141,6 @@ func TestUserRegister(t *testing.T) {
 			"password": 1,
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
-		fmt.Println(req)
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
@@ -282,7 +281,7 @@ func TestLogin(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
-		
+
 		context := e.NewContext(req, res)
 		context.SetPath("/users/login")
 
@@ -290,8 +289,8 @@ func TestLogin(t *testing.T) {
 		userController.Login()(context)
 
 		response := UserLoginResponseFormat{}
-
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
+		fmt.Println(response)
 
 		assert.Equal(t, 200, response.Code)
 		assert.Equal(t, "adlan@adlan.com", response.Data.Email)
@@ -327,7 +326,7 @@ func TestLogin(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
-		
+
 		context := e.NewContext(req, res)
 		context.SetPath("/users/login")
 

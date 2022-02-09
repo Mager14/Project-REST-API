@@ -96,3 +96,40 @@ func (tc *TaskController) Delete() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Delete Task", nil))
 	}
 }
+
+// func (tc *TaskController) TaskCompleted() echo.HandlerFunc {
+// 	return func(c echo.Context) error {
+// 		userId,_ := strconv.Atoi(c.Param("id"))
+// 		task := RegisterTaskRequestFormat{}
+
+// 		if err := c.Bind(&task); err != nil {
+// 			return c.JSON(http.StatusBadRequest, common.BadRequest())
+// 		}
+
+// 		res, err := tc.repo.TaskRegister(entities.Task{Nama: task.Nama, Priority: task.Priority, User_ID: task.User_ID, Project_ID: task.Project_ID})
+
+// 		if err != nil {
+// 			return c.JSON(http.StatusNotFound, common.InternalServerError())
+// 		}
+
+// 		return c.JSON(http.StatusCreated, common.Success(http.StatusCreated, "Success Create Task", res))
+// 	}
+// }
+// func (tc *TaskController) TaskReopen() echo.HandlerFunc {
+// 	return func(c echo.Context) error {
+// 		task := RegisterTaskRequestFormat{}
+
+// 		if err := c.Bind(&task); err != nil {
+// 			return c.JSON(http.StatusBadRequest, common.BadRequest())
+// 		}
+
+// 		res, err := tc.repo.TaskRegister(entities.Task{Nama: task.Nama, Priority: task.Priority, User_ID: task.User_ID, Project_ID: task.Project_ID})
+
+// 		if err != nil {
+// 			return c.JSON(http.StatusNotFound, common.InternalServerError())
+// 		}
+
+// 		return c.JSON(http.StatusCreated, common.Success(http.StatusCreated, "Success Create Task", res))
+// 	}
+// 	}
+// }

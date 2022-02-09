@@ -3,6 +3,7 @@ package user
 import (
 	"Project-REST-API/delivery/controllers/common"
 	"Project-REST-API/entities"
+	"Project-REST-API/middlewares"
 	"Project-REST-API/repository/user"
 	"net/http"
 	"strconv"
@@ -77,8 +78,15 @@ func (uc *UserController) Login() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
+		resToken, _ := middlewares.GenerateToken(int(res.ID))
+		// fmt.Println(middlewares.ExtractTokenUserId(c))
 
-		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Create User", res))
+		return c.JSON(http.StatusOK, UserLoginResponseFormat{
+			Code:    http.StatusOK,
+			Message: "Success Create User",
+			Data:    res,
+			Token:   resToken,
+		})
 	}
 }
 

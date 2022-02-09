@@ -15,6 +15,7 @@ type UserLoginResponseFormat struct {
 	Code    int           `json:"code"`
 	Message string        `json:"message"`
 	Data    entities.User `json:"data"`
+	Token   interface{}   `json:"token"`
 }
 
 type RegisterRequestFormat struct {
