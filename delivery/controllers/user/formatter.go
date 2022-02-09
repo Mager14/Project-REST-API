@@ -24,9 +24,9 @@ type RegisterRequestFormat struct {
 }
 
 type RegisterUserResponseFormat struct {
-	Code    int           `json:"code"`
-	Message string        `json:"message"`
-	Data    entities.User `json:"data"`
+	Code    int           `json:"code" form:"code"`
+	Message string        `json:"message" form:"message"`
+	Data    entities.User `json:"data" form:"data"`
 }
 
 type GetUsersResponseFormat struct {
