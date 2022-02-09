@@ -161,41 +161,42 @@ func TestUserRegister(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	t.Run("Update", func(t *testing.T) {
+	t.Run("Update Task", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"nama":     "Adlan",
-			"email":    "adlan@adlan.com",
-			"password": "adlan123",
+			"nama":       "Taskku",
+			"priority":   12,
+			"user_id":    1,
+			"project_id": 1,
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/users/:id")
+		context.SetPath("/task/:id")
 
-		userController := New(&MockUserRepository{})
-		userController.Update()(context)
+		taskController := New(&MockTaskRepository{})
+		taskController.Update()(context)
 
 		response := UpdateResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		assert.Equal(t, 200, response.Code)
-		assert.Equal(t, "Adlan", response.Data.Nama)
+		assert.Equal(t, "Taskku", response.Data.Nama)
 
 	})
 
-	t.Run("ErrorUpdate", func(t *testing.T) {
+	t.Run("ErrorUpdateTask", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPut, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/users/:id")
+		context.SetPath("/task/:id")
 
-		userController := New(&MockFalseUserRepository{})
-		userController.Update()(context)
+		taskController := New(&MockFalseTaskRepository{})
+		taskController.Update()(context)
 
 		response := UpdateResponseFormat{}
 
@@ -208,18 +209,19 @@ func TestUpdate(t *testing.T) {
 	t.Run("UpdateBind", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"nama":     "Adlan",
-			"email":    "adlan@adlan.com",
-			"password": 123,
+			"nama":       "Taskku",
+			"priority":   12,
+			"user_id":    1,
+			"project_id": 1,
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/users/:id")
+		context.SetPath("/task/:id")
 
-		userController := New(&MockUserRepository{})
+		userController := New(&MockTaskRepository{})
 		userController.Update()(context)
 
 		response := UpdateResponseFormat{}
@@ -271,45 +273,44 @@ func TestDelete(t *testing.T) {
 	})
 }
 
+type MockTaskRepository struct{}
 
-type MockUserRepository struct{}
-
-func (m MockUserRepository) Get() ([]entities.User, error) {
-	return []entities.User{
-		{Nama: "Adlan", Email: "adlan@adlan.com", Password: "adlan123"},
+func (m MockTaskRepository) Get() ([]entities.Task, error) {
+	return []entities.Task{
+		{Nama: "Taskku", Priority: 12, User_ID: 1, Project_ID: 1},
 	}, nil
 }
 
-func (m MockUserRepository) GetById(userId int) (entities.User, error) {
-	return entities.User{Nama: "Adlan", Email: "adlan@adlan.com", Password: "adlan123"}, nil
+func (m MockTaskRepository) GetById(taskId int) (entities.Task, error) {
+	return entities.Task{Nama: "Taskku", Priority: 12, User_ID: 1, Project_ID: 1}, nil
 }
 
-func (m MockUserRepository) UserRegister(newUser entities.User) (entities.User, error) {
-	return entities.User{Nama: "Adlan", Email: "adlan@adlan.com", Password: "adlan123"}, nil
+func (m MockTaskRepository) TaskRegister(newTask entities.Task) (entities.Task, error) {
+	return entities.Task{Nama: "Taskku", Priority: 12, User_ID: 1, Project_ID: 1}, nil
 }
 
-func (m MockUserRepository) Update(userId int, newUser entities.User) (entities.User, error) {
-	return entities.User{Nama: "Adlan", Email: "adlan@adlan.com", Password: "adlan123"}, nil
+func (m MockTaskRepository) Update(taskId int, newTask entities.Task) (entities.Task, error) {
+	return entities.Task{Nama: "Taskku", Priority: 12, User_ID: 1, Project_ID: 1}, nil
 }
 
-func (m MockUserRepository) Delete(userId int) error {
+func (m MockTaskRepository) Delete(taskId int) error {
 	return nil
 }
 
-type MockFalseUserRepository struct{}
+type MockFalseTaskRepository struct{}
 
-func (m MockFalseUserRepository) Get() ([]entities.User, error) {
-	return nil, errors.New("False User Object")
+func (m MockFalseTaskRepository) Get() ([]entities.Task, error) {
+	return nil, errors.New("False Task Object")
 }
-func (m MockFalseUserRepository) GetById(userId int) (entities.User, error) {
-	return entities.User{}, errors.New("False Get Object")
+func (m MockFalseTaskRepository) GetById(taskId int) (entities.Task, error) {
+	return entities.Task{}, errors.New("False Get Object")
 }
-func (m MockFalseUserRepository) UserRegister(newUser entities.User) (entities.User, error) {
-	return entities.User{}, errors.New("False Register Object")
+func (m MockFalseTaskRepository) TaskRegister(newTask entities.Task) (entities.Task, error) {
+	return entities.Task{}, errors.New("False Register Object")
 }
-func (m MockFalseUserRepository) Update(userId int, newUser entities.User) (entities.User, error) {
-	return entities.User{}, errors.New("False Update Object")
+func (m MockFalseTaskRepository) Update(taskId int, newTask entities.Task) (entities.Task, error) {
+	return entities.Task{}, errors.New("False Update Object")
 }
-func (m MockFalseUserRepository) Delete(userId int) error {
+func (m MockFalseTaskRepository) Delete(taskId int) error {
 	return errors.New("False Delete Object")
 }
