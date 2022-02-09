@@ -15,21 +15,21 @@ func TestInsert(t *testing.T) {
 
 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.User{})
-	db.AutoMigrate(&entities.User{})
+	db.Migrator().DropTable(&entities.Task{})
+	db.AutoMigrate(&entities.Task{})
 
 	repo := New(db)
 
-	t.Run("Success Create User", func(t *testing.T) {
-		mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
-		res, err := repo.UserRegister(mockUser)
+	t.Run("Success Creating Task", func(t *testing.T) {
+		mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1}
+		res, err := repo.TaskRegister(mockTask)
 		assert.Nil(t, err)
 		assert.Equal(t, 1, int(res.ID))
 	})
 
-	t.Run("Fail Create User", func(t *testing.T) {
-		mockUser := entities.User{Model: gorm.Model{ID: 1}, Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
-		_, err := repo.UserRegister(mockUser)
+	t.Run("Fail Creating Task", func(t *testing.T) {
+		mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1}
+		_, err := repo.TaskRegister(mockTask)
 		assert.NotNil(t, err)
 	})
 }
@@ -39,22 +39,22 @@ func TestGet(t *testing.T) {
 
 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.User{})
-	db.AutoMigrate(&entities.User{})
+	db.Migrator().DropTable(&entities.Task{})
+	db.AutoMigrate(&entities.Task{})
 
 	repo := New(db)
-	mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
-	db.Create(&mockUser)
+	mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1}
+	db.Create(&mockTask)
 
-	t.Run("Success Getting User", func(t *testing.T) {
+	t.Run("Success Getting Task", func(t *testing.T) {
 		res, err := repo.Get()
 		assert.Nil(t, err)
-		assert.Equal(t, mockUser.Nama, res[0].Nama)
+		assert.Equal(t, mockTask.Nama, res[0].Nama)
 	})
 
-	db.Migrator().DropTable(&entities.User{})
+	db.Migrator().DropTable(&entities.Task{})
 
-	t.Run("Fail Getting User", func(t *testing.T) {
+	t.Run("Fail Getting Task", func(t *testing.T) {
 		_, err := repo.Get()
 		assert.NotNil(t, err)
 	})
@@ -65,23 +65,23 @@ func TestGetById(t *testing.T) {
 
 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.User{})
-	db.AutoMigrate(&entities.User{})
+	db.Migrator().DropTable(&entities.Task{})
+	db.AutoMigrate(&entities.Task{})
 
 	repo := New(db)
-	mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
-	db.Create(&mockUser)
+	mockTask := entities.Task{Nama: "Mawan", Priority: 1, User_ID: 1, Project_ID: 1}
+	db.Create(&mockTask)
 
-	t.Run("Success Getting User ID", func(t *testing.T) {
-		res, err := repo.GetById(int(mockUser.ID))
+	t.Run("Success Getting Task by ID", func(t *testing.T) {
+		res, err := repo.GetById(int(mockTask.ID))
 		assert.Nil(t, err)
-		assert.Equal(t, mockUser.Nama, res.Nama)
+		assert.Equal(t, mockTask.Nama, res.Nama)
 	})
 
-	db.Migrator().DropTable(&entities.User{})
+	db.Migrator().DropTable(&entities.Task{})
 
-	t.Run("Fail Getting User ID", func(t *testing.T) {
-		_, err := repo.GetById(int(mockUser.ID))
+	t.Run("Fail Getting Task by ID", func(t *testing.T) {
+		_, err := repo.GetById(int(mockTask.ID))
 		assert.NotNil(t, err)
 	})
 }
@@ -131,7 +131,7 @@ func TestDelete(t *testing.T) {
 
 	db.Migrator().DropTable(&entities.Task{})
 
-	t.Run("Fail Getting Task ID", func(t *testing.T) {
+	t.Run("Fail Deleting Task ID", func(t *testing.T) {
 		err := repo.Delete(int(mockTask.ID))
 		assert.NotNil(t, err)
 	})
