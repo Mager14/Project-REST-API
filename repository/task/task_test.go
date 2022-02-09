@@ -1,4 +1,4 @@
-package user
+package task
 
 import (
 	"Project-REST-API/configs"
@@ -65,23 +65,23 @@ func TestGetById(t *testing.T) {
 
 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.User{})
-	db.AutoMigrate(&entities.User{})
+	db.Migrator().DropTable(&entities.Task{})
+	db.AutoMigrate(&entities.Task{})
 
 	repo := New(db)
-	mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
-	db.Create(&mockUser)
+	mockTask := entities.Task{Nama: "Mawan", Priority: 1, User_ID: 1, Project_ID: 1}
+	db.Create(&mockTask)
 
-	t.Run("Success Getting User ID", func(t *testing.T) {
-		res, err := repo.GetById(int(mockUser.ID))
+	t.Run("Success Getting Task by ID", func(t *testing.T) {
+		res, err := repo.GetById(int(mockTask.ID))
 		assert.Nil(t, err)
-		assert.Equal(t, mockUser.Nama, res.Nama)
+		assert.Equal(t, mockTask.Nama, res.Nama)
 	})
 
-	db.Migrator().DropTable(&entities.User{})
+	db.Migrator().DropTable(&entities.Task{})
 
-	t.Run("Fail Getting User ID", func(t *testing.T) {
-		_, err := repo.GetById(int(mockUser.ID))
+	t.Run("Fail Getting Task by ID", func(t *testing.T) {
+		_, err := repo.GetById(int(mockTask.ID))
 		assert.NotNil(t, err)
 	})
 }
@@ -133,32 +133,6 @@ func TestDelete(t *testing.T) {
 
 	t.Run("Fail Getting User ID", func(t *testing.T) {
 		err := repo.Delete(int(mockUser.ID))
-		assert.NotNil(t, err)
-	})
-}
-
-func TestLogin(t *testing.T) {
-	config := configs.GetConfig()
-
-	db := utils.InitDB(config)
-
-	db.Migrator().DropTable(&entities.User{})
-	db.AutoMigrate(&entities.User{})
-
-	repo := New(db)
-	mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
-	db.Create(&mockUser)
-
-	t.Run("Success Login", func(t *testing.T) {
-		mockLogin := entities.User{Email: "steven@steven.com", Password: "steven123"}
-		res, err := repo.Login(mockLogin)
-		assert.Nil(t, err)
-		assert.Equal(t, 1, int(res.ID))
-	})
-
-	t.Run("Login Failed", func(t *testing.T) {
-		mockLogin := entities.User{Email: "steven@steven.com", Password: "asdasd"}
-		_, err := repo.Login(mockLogin)
 		assert.NotNil(t, err)
 	})
 }
