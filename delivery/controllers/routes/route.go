@@ -2,6 +2,7 @@ package routes
 
 import (
 	"Project-REST-API/configs"
+	"Project-REST-API/delivery/controllers/project"
 	"Project-REST-API/delivery/controllers/task"
 	"Project-REST-API/delivery/controllers/user"
 	"Project-REST-API/middlewares"
@@ -10,7 +11,7 @@ import (
 	m "github.com/labstack/echo/v4/middleware"
 )
 
-func RegisterPath(e *echo.Echo, uc *user.UserController, tc *task.TaskController) {
+func RegisterPath(e *echo.Echo, uc *user.UserController, tc *task.TaskController, pc *project.ProjectController) {
 
 	e.POST("users/register", uc.UserRegister())
 	e.POST("users/login", uc.Login())
@@ -30,14 +31,14 @@ func RegisterPath(e *echo.Echo, uc *user.UserController, tc *task.TaskController
 	eTask.PUT("task/:id", tc.Update())
 	eTask.DELETE("task/:id", tc.Delete())
 
-	// e.POST("task/:id/completed", tc.TaskCompleted())
-	// e.POST("task/:id/reopen", tc.TaskReopen())
-
-	// x := middlewares.ExtractTokenUserId()
-	// x1, x2 := fmt.Println(x)
-	// fmt.Println(x1, x2)
-	// e.GET("", middlewares.ExtractTokenUserId)
-
-	// e.GET("", middlewares.ExtractTokenId)
+	eProject := e.Group("")
+	eProject.POST("projects/register", pc.ProjectRegister())
+	eProject.Use(m.JWT([]byte(configs.JWT_SECRET)))
+	eProject.GET("projects", pc.Get())
+	eProject.GET("projects/:id", pc.GetById())
+	eProject.PUT("projects/:id", pc.Update())
+	eProject.DELETE("projects/:id", pc.Delete())
+	// e.POST("task/:id/completed", pc.TaskCompleted())
+	// e.POST("task/:id/reopen", pc.TaskReopen())
 
 }

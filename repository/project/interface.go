@@ -1,0 +1,11 @@
+package project
+
+import "Project-REST-API/entities"
+
+type Project interface {
+	Get() ([]entities.Project, error)
+	GetById(projectId int) (entities.Project, error)
+	ProjectRegister(newUser entities.Project) (entities.Project, error)
+	Update(projectId int, newUser entities.Project) (entities.Project, error)
+	Delete(projectId int) error
+}
