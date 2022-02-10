@@ -3,7 +3,9 @@ package task
 import (
 	"Project-REST-API/delivery/controllers/common"
 	"Project-REST-API/entities"
+	"Project-REST-API/middlewares"
 	"Project-REST-API/repository/task"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -68,6 +70,7 @@ func (tc *TaskController) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var newTask = UpdateTaskRequestFormat{}
 		taskId, _ := strconv.Atoi(c.Param("id"))
+		fmt.Println(middlewares.ExtractTokenUserId(c))
 
 		if err := c.Bind(&newTask); err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())

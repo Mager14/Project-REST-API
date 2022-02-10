@@ -6,6 +6,6 @@ type Task struct {
 	gorm.Model
 	Nama       string
 	Priority   int
-	User_ID    int
+	User_ID    int `gorm:"column:user_id" json:"user_id"`
 	Project_ID int
 }

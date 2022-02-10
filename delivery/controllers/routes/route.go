@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"Project-REST-API/configs"
 	"Project-REST-API/delivery/controllers/task"
 	"Project-REST-API/delivery/controllers/user"
 	"Project-REST-API/middlewares"
@@ -10,6 +11,7 @@ import (
 )
 
 func RegisterPath(e *echo.Echo, uc *user.UserController, tc *task.TaskController) {
+
 	e.POST("users/register", uc.UserRegister())
 	e.POST("users/login", uc.Login())
 	eAuth := e.Group("")
@@ -20,12 +22,14 @@ func RegisterPath(e *echo.Echo, uc *user.UserController, tc *task.TaskController
 	eAuth.DELETE("users/:id", uc.Delete())
 
 	// middleware.JWT([]byte(config.JWT_SECRET))
-	e.POST("task/register", tc.TaskRegister())
-	eAuth.Use(m.BasicAuth(middlewares.BusicAuth))
-	eAuth.GET("task", tc.Get())
-	eAuth.GET("task/:id", tc.GetById())
-	eAuth.PUT("task/:id", tc.Update())
-	eAuth.DELETE("task/:id", tc.Delete())
+	eTask := e.Group("todo/")
+	eTask.POST("task/register", tc.TaskRegister())
+	eTask.Use(m.JWT([]byte(configs.JWT_SECRET)))
+	eTask.GET("task", tc.Get())
+	eTask.GET("task/:id", tc.GetById())
+	eTask.PUT("task/:id", tc.Update())
+	eTask.DELETE("task/:id", tc.Delete())
+
 	// e.POST("task/:id/completed", tc.TaskCompleted())
 	// e.POST("task/:id/reopen", tc.TaskReopen())
 

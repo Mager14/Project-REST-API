@@ -78,8 +78,7 @@ func (uc *UserController) Login() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
-		resToken, _ := middlewares.GenerateToken(int(res.ID))
-		// fmt.Println(middlewares.ExtractTokenUserId(c))
+		resToken, _ := middlewares.GenerateToken(res)
 
 		return c.JSON(http.StatusOK, UserLoginResponseFormat{
 			Code:    http.StatusOK,

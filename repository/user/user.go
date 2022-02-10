@@ -28,8 +28,11 @@ func (ur *UserRepository) Get() ([]entities.User, error) {
 
 func (ur *UserRepository) GetById(userId int) (entities.User, error) {
 	arrUser := entities.User{}
+	// var artikel models.Artikel
 
-	if err := ur.database.First(&arrUser, userId).Error; err != nil {
+	// Conn.Preload("Komentar").Find(&artikle)
+
+	if err := ur.database.Preload("Task").Find(&arrUser, userId).Error; err != nil {
 		return arrUser, err
 	}
 
