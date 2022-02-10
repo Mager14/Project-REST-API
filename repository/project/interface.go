@@ -5,7 +5,7 @@ import "Project-REST-API/entities"
 type Project interface {
 	Get() ([]entities.Project, error)
 	GetById(projectId int) (entities.Project, error)
-	ProjectRegister(newUser entities.Project) (entities.Project, error)
-	Update(projectId int, newUser entities.Project) (entities.Project, error)
+	ProjectRegister(newProject entities.Project) (entities.Project, error)
+	Update(projectId int, newProject entities.Project) (entities.Project, error)
 	Delete(projectId int) error
 }
