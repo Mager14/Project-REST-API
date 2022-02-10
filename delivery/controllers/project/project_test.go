@@ -16,34 +16,34 @@ import (
 
 func TestGet(t *testing.T) {
 
-	t.Run("ErrorGetUser", func(t *testing.T) {
+	t.Run("GET", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/users")
+		context.SetPath("/projects")
 
-		taskController := New(MockTaskRepository{})
-		taskController.Get()(context)
+		projectController := New(MockProjectRepository{})
+		projectController.Get()(context)
 
-		var response GetTasksResponseFormat
+		var response GetProjectsResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
-		assert.Equal(t, "Taskku", response.Data[0].Nama)
+		assert.Equal(t, "ProjectKu", response.Data[0].Nama)
 		//
 	})
-	t.Run("ErrorGetUser", func(t *testing.T) {
+	t.Run("GET", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
 
 		context := e.NewContext(req, res)
-		context.SetPath("/users")
+		context.SetPath("/projects")
 
-		falsetaskController := New(MockFalseTaskRepository{})
-		falsetaskController.Get()(context)
+		falseprojectController := New(MockFalseProjectRepository{})
+		falseprojectController.Get()(context)
 
-		var response GetTaskResponseFormat
+		var response GetProjectsResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 		assert.Equal(t, response.Message, "There is some error on server")
@@ -57,17 +57,17 @@ func TestGetById(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/users/:id")
+		context.SetPath("/projects/:id")
 
-		taskController := New(&MockTaskRepository{})
-		taskController.GetById()(context)
+		projectController := New(&MockProjectRepository{})
+		projectController.GetById()(context)
 
-		response := GetTaskResponseFormat{}
+		response := GetProjectResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		assert.Equal(t, 200, response.Code)
-		assert.Equal(t, "Taskku", response.Data.Nama)
+		assert.Equal(t, "ProjectKu", response.Data.Nama)
 
 	})
 	t.Run("ErorGetById", func(t *testing.T) {
@@ -76,12 +76,12 @@ func TestGetById(t *testing.T) {
 		res := httptest.NewRecorder()
 
 		context := e.NewContext(req, res)
-		context.SetPath("/users/:id")
+		context.SetPath("/projects/:id")
 
-		falsetaskController := New(MockFalseTaskRepository{})
-		falsetaskController.GetById()(context)
+		falseprojectController := New(MockFalseProjectRepository{})
+		falseprojectController.GetById()(context)
 
-		var response GetTaskResponseFormat
+		var response GetProjectResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 		assert.Equal(t, response.Message, "not found")
@@ -89,43 +89,40 @@ func TestGetById(t *testing.T) {
 
 }
 
-func TestTaskRegister(t *testing.T) {
-	t.Run("TaskRegister", func(t *testing.T) {
+func TestProjectRegister(t *testing.T) {
+	t.Run("ProjectRegister", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"nama":       "Taskku",
-			"priority":   1,
-			"user_ID":    1,
-			"project_ID": 1,
+			"nama": "ProjectKu",
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/task/register")
+		context.SetPath("/projects/register")
 
-		taskController := New(MockTaskRepository{})
-		taskController.TaskRegister()(context)
+		projectController := New(MockProjectRepository{})
+		projectController.ProjectRegister()(context)
 
-		response := RegisterTaskResponseFormat{}
+		response := RegisterProjectResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		// assert.Equal(t, 201, response.Code)
-		assert.Equal(t, "Taskku", response.Data.Nama)
+		assert.Equal(t, "ProjectKu", response.Data.Nama)
 
 	})
-	t.Run("ErorTaskRegister", func(t *testing.T) {
+	t.Run("ErorProjectRegister", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/tasks/register")
+		context.SetPath("/projects/register")
 
-		userController := New(MockFalseTaskRepository{})
-		userController.TaskRegister()(context)
+		projectController := New(MockFalseProjectRepository{})
+		projectController.ProjectRegister()(context)
 
-		response := RegisterTaskResponseFormat{}
+		response := RegisterProjectResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
@@ -134,25 +131,22 @@ func TestTaskRegister(t *testing.T) {
 
 	})
 
-	t.Run("TaskRegisterBind", func(t *testing.T) {
+	t.Run("ProjectRegisterBind", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"nama":       "Taskku",
-			"priority":   1,
-			"user_ID":    1,
-			"project_ID": "test",
+			"nama": 1,
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		fmt.Println(req)
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/tasks/register")
+		context.SetPath("/projects/register")
 
-		userController := New(MockFalseTaskRepository{})
-		userController.TaskRegister()(context)
+		projectController := New(MockFalseProjectRepository{})
+		projectController.ProjectRegister()(context)
 
-		response := RegisterTaskResponseFormat{}
+		response := RegisterProjectResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
@@ -163,42 +157,39 @@ func TestTaskRegister(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	t.Run("Update Task", func(t *testing.T) {
+	t.Run("Update", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"nama":       "Taskku",
-			"priority":   12,
-			"user_id":    1,
-			"project_id": 1,
+			"nama": "ProjectKu",
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/task/:id")
+		context.SetPath("/projects/:id")
 
-		taskController := New(&MockTaskRepository{})
-		taskController.Update()(context)
+		projectController := New(&MockProjectRepository{})
+		projectController.Update()(context)
 
 		response := UpdateResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		assert.Equal(t, 200, response.Code)
-		assert.Equal(t, "Taskku", response.Data.Nama)
+		assert.Equal(t, "ProjectKu", response.Data.Nama)
 
 	})
 
-	t.Run("ErrorUpdateTask", func(t *testing.T) {
+	t.Run("ErrorUpdate", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPut, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/task/:id")
+		context.SetPath("/projects/:id")
 
-		taskController := New(&MockFalseTaskRepository{})
-		taskController.Update()(context)
+		projectController := New(&MockFalseProjectRepository{})
+		projectController.Update()(context)
 
 		response := UpdateResponseFormat{}
 
@@ -211,17 +202,16 @@ func TestUpdate(t *testing.T) {
 	t.Run("UpdateBind", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"nama":     "Taskku",
-			"priority": "12",
+			"nama": 1,
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/task/:id")
+		context.SetPath("/projects/:id")
 
-		tastController := New(&MockFalseTaskRepository{})
+		tastController := New(&MockFalseProjectRepository{})
 		tastController.Update()(context)
 
 		response := UpdateResponseFormat{}
@@ -234,15 +224,15 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	t.Run("DeleteTask", func(t *testing.T) {
+	t.Run("Delete", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/tasks/:id")
+		context.SetPath("/projects/:id")
 
-		taskController := New(&MockTaskRepository{})
-		taskController.Delete()(context)
+		projectController := New(&MockProjectRepository{})
+		projectController.Delete()(context)
 
 		response := DeleteResponseFormat{}
 
@@ -253,15 +243,15 @@ func TestDelete(t *testing.T) {
 
 	})
 
-	t.Run("ErrorDeleteTask", func(t *testing.T) {
+	t.Run("ErrorDelete", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/tasks/:id")
+		context.SetPath("/projects/:id")
 
-		userController := New(&MockFalseTaskRepository{})
-		userController.Delete()(context)
+		projectController := New(&MockFalseProjectRepository{})
+		projectController.Delete()(context)
 
 		response := DeleteResponseFormat{}
 
@@ -273,44 +263,44 @@ func TestDelete(t *testing.T) {
 	})
 }
 
-type MockTaskRepository struct{}
+type MockProjectRepository struct{}
 
-func (m MockTaskRepository) Get() ([]entities.Task, error) {
-	return []entities.Task{
-		{Nama: "Taskku", Priority: 1, User_ID: 1, Project_ID: 1},
+func (m MockProjectRepository) Get() ([]entities.Project, error) {
+	return []entities.Project{
+		{Nama: "ProjectKu"},
 	}, nil
 }
 
-func (m MockTaskRepository) GetById(taskId int) (entities.Task, error) {
-	return entities.Task{Nama: "Taskku", Priority: 1, User_ID: 1, Project_ID: 1}, nil
+func (m MockProjectRepository) GetById(project_id int) (entities.Project, error) {
+	return entities.Project{Nama: "ProjectKu"}, nil
 }
 
-func (m MockTaskRepository) TaskRegister(newTask entities.Task) (entities.Task, error) {
-	return entities.Task{Nama: "Taskku", Priority: 1, User_ID: 1, Project_ID: 1}, nil
+func (m MockProjectRepository) ProjectRegister(newProject entities.Project) (entities.Project, error) {
+	return entities.Project{Nama: "ProjectKu"}, nil
 }
 
-func (m MockTaskRepository) Update(taskId int, newTask entities.Task) (entities.Task, error) {
-	return entities.Task{Nama: "Taskku", Priority: 1, User_ID: 1, Project_ID: 1}, nil
+func (m MockProjectRepository) Update(project_id int, newProject entities.Project) (entities.Project, error) {
+	return entities.Project{Nama: "ProjectKu"}, nil
 }
 
-func (m MockTaskRepository) Delete(taskId int) error {
+func (m MockProjectRepository) Delete(project_id int) error {
 	return nil
 }
 
-type MockFalseTaskRepository struct{}
+type MockFalseProjectRepository struct{}
 
-func (m MockFalseTaskRepository) Get() ([]entities.Task, error) {
-	return nil, errors.New("False Task Object")
+func (m MockFalseProjectRepository) Get() ([]entities.Project, error) {
+	return nil, errors.New("False Project Object")
 }
-func (m MockFalseTaskRepository) GetById(taskId int) (entities.Task, error) {
-	return entities.Task{}, errors.New("False Get Object")
+func (m MockFalseProjectRepository) GetById(project_id int) (entities.Project, error) {
+	return entities.Project{}, errors.New("False Get Object")
 }
-func (m MockFalseTaskRepository) TaskRegister(newTask entities.Task) (entities.Task, error) {
-	return entities.Task{}, errors.New("False Register Object")
+func (m MockFalseProjectRepository) ProjectRegister(newProject entities.Project) (entities.Project, error) {
+	return entities.Project{}, errors.New("False Register Object")
 }
-func (m MockFalseTaskRepository) Update(taskId int, newTask entities.Task) (entities.Task, error) {
-	return entities.Task{}, errors.New("False Update Object")
+func (m MockFalseProjectRepository) Update(project_id int, newProject entities.Project) (entities.Project, error) {
+	return entities.Project{}, errors.New("False Update Object")
 }
-func (m MockFalseTaskRepository) Delete(taskId int) error {
+func (m MockFalseProjectRepository) Delete(project_id int) error {
 	return errors.New("False Delete Object")
 }
