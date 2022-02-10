@@ -51,12 +51,12 @@ func (tc *TaskController) GetById() echo.HandlerFunc {
 func (tc *TaskController) TaskRegister() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		task := RegisterTaskRequestFormat{}
-
+		userId := int(middlewares.ExtractTokenUserId(c))
 		if err := c.Bind(&task); err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
-		res, err := tc.repo.TaskRegister(entities.Task{Nama: task.Nama, Priority: task.Priority, User_ID: task.User_ID, Project_ID: task.Project_ID})
+		res, err := tc.repo.TaskRegister(entities.Task{Nama: task.Nama, Priority: task.Priority, User_ID: userId, Project_ID: task.Project_ID})
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())

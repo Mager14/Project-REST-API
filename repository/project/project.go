@@ -29,7 +29,7 @@ func (tr *ProjectRepository) Get() ([]entities.Project, error) {
 func (tr *ProjectRepository) GetById(projectId int) (entities.Project, error) {
 	arrProject := entities.Project{}
 
-	if err := tr.database.First(&arrProject, projectId).Error; err != nil {
+	if err := tr.database.Preload("Task").Find(&arrProject, projectId).Error; err != nil {
 		return arrProject, err
 	}
 

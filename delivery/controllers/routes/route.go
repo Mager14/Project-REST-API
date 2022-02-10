@@ -13,6 +13,8 @@ import (
 
 func RegisterPath(e *echo.Echo, uc *user.UserController, tc *task.TaskController, pc *project.ProjectController) {
 
+	//=========================================================
+	//ROUT USERS
 	e.POST("users/register", uc.UserRegister())
 	e.POST("users/login", uc.Login())
 	eAuth := e.Group("")
@@ -22,23 +24,26 @@ func RegisterPath(e *echo.Echo, uc *user.UserController, tc *task.TaskController
 	eAuth.PUT("users/:id", uc.Update())
 	eAuth.DELETE("users/:id", uc.Delete())
 
-	// middleware.JWT([]byte(config.JWT_SECRET))
+	//===========================================================
+	//ROUTE TASK
 	eTask := e.Group("todo/")
-	eTask.POST("task/register", tc.TaskRegister())
 	eTask.Use(m.JWT([]byte(configs.JWT_SECRET)))
+	eTask.POST("task/register", tc.TaskRegister())
 	eTask.GET("task", tc.Get())
 	eTask.GET("task/:id", tc.GetById())
 	eTask.PUT("task/:id", tc.Update())
 	eTask.DELETE("task/:id", tc.Delete())
+	e.POST("task/:id/completed", tc.TaskCompleted())
+	e.POST("task/:id/reopen", tc.TaskReopen())
 
+	//===========================================================
+	//ROUTE PROJECT
+	e.POST("projects/register", pc.ProjectRegister())
 	eProject := e.Group("")
-	eProject.POST("projects/register", pc.ProjectRegister())
 	eProject.Use(m.JWT([]byte(configs.JWT_SECRET)))
 	eProject.GET("projects", pc.Get())
 	eProject.GET("projects/:id", pc.GetById())
 	eProject.PUT("projects/:id", pc.Update())
 	eProject.DELETE("projects/:id", pc.Delete())
-	// e.POST("task/:id/completed", pc.TaskCompleted())
-	// e.POST("task/:id/reopen", pc.TaskReopen())
 
 }

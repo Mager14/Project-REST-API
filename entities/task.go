@@ -7,5 +7,5 @@ type Task struct {
 	Nama       string
 	Priority   int
 	User_ID    int `gorm:"column:user_id" json:"user_id"`
-	Project_ID int
+	Project_ID int `gorm:"column:project_id" json:"project_id"`
 }
