@@ -33,8 +33,8 @@ func RegisterPath(e *echo.Echo, uc *user.UserController, tc *task.TaskController
 	eTask.GET("task/:id", tc.GetById())
 	eTask.PUT("task/:id", tc.Update())
 	eTask.DELETE("task/:id", tc.Delete())
-	e.POST("task/:id/completed", tc.TaskCompleted())
-	e.POST("task/:id/reopen", tc.TaskReopen())
+	// e.POST("task/:id/completed", tc.TaskCompleted())
+	// e.POST("task/:id/reopen", tc.TaskReopen())
 
 	//===========================================================
 	//ROUTE PROJECT

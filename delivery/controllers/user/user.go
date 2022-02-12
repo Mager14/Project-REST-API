@@ -82,7 +82,7 @@ func (uc *UserController) Login() echo.HandlerFunc {
 
 		return c.JSON(http.StatusOK, UserLoginResponseFormat{
 			Code:    http.StatusOK,
-			Message: "Success Create User",
+			Message: "Success Login User",
 			Data:    res,
 			Token:   resToken,
 		})

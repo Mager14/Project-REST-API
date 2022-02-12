@@ -15,17 +15,16 @@ type RegisterTaskRequestFormat struct {
 	User_ID    int    `json:"user_id" form:"user_id"`
 	Project_ID int    `json:"project_id" form:"project_id"`
 }
-type CompletedTaskRequestFormat struct {
-	Nama       string `json:"nama" form:"nama"`
-	Priority   int    `json:"priority" form:"priority"`
-	User_ID    int    `json:"user_id" form:"user_id"`
-	Project_ID int    `json:"project_id" form:"project_id"`
-}
+// type CompletedTaskRequestFormat struct {
+// 	gorm.Model
+// 	Nama       string `json:"nama" form:"nama"`
+// 	Status     string `json:"status" form:"status"`
+// }
 type ReopenTaskRequestFormat struct {
+	gorm.Model
 	Nama       string `json:"nama" form:"nama"`
 	Priority   int    `json:"priority" form:"priority"`
-	User_ID    int    `json:"user_id" form:"user_id"`
-	Project_ID int    `json:"project_id" form:"project_id"`
+	Status     string `json:"status" form:"status"`
 }
 type UpdateTaskRequestFormat struct {
 	gorm.Model
@@ -64,4 +63,16 @@ type DeleteResponseFormat struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
+}
+
+type ReopenTaskResponFormat struct {
+	Code    int           `json:"code"`
+	Message string        `json:"message"`
+	Data    entities.Task `json:"data"`
+}
+
+type CompleteTaskResponFormat struct {
+	Code    int           `json:"code"`
+	Message string        `json:"message"`
+	Data    entities.Task `json:"data"`
 }

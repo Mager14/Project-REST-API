@@ -8,4 +8,5 @@ type Task struct {
 	Priority   int
 	User_ID    int `gorm:"column:user_id" json:"user_id"`
 	Project_ID int `gorm:"column:project_id" json:"project_id"`
+	Status	string 
 }
