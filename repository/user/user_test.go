@@ -137,28 +137,28 @@ func TestDelete(t *testing.T) {
 	})
 }
 
-func TestLogin(t *testing.T) {
-	config := configs.GetConfig()
+// func TestLogin(t *testing.T) {
+// 	config := configs.GetConfig()
 
-	db := utils.InitDB(config)
+// 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.User{})
-	db.AutoMigrate(&entities.User{})
+// 	db.Migrator().DropTable(&entities.User{})
+// 	db.AutoMigrate(&entities.User{})
 
-	repo := New(db)
-	mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
-	db.Create(&mockUser)
+// 	repo := New(db)
+// 	mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
+// 	db.Create(&mockUser)
 
-	t.Run("Success Login", func(t *testing.T) {
-		mockLogin := entities.User{Email: "steven@steven.com", Password: "steven123"}
-		res, err := repo.Login(mockLogin)
-		assert.Nil(t, err)
-		assert.Equal(t, 1, int(res.ID))
-	})
+// 	t.Run("Success Login", func(t *testing.T) {
+// 		mockLogin := entities.User{Email: "steven@steven.com", Password: "steven123"}
+// 		res, err := repo.Login(mockLogin)
+// 		assert.Nil(t, err)
+// 		assert.Equal(t, 1, int(res.ID))
+// 	})
 
-	t.Run("Login Failed", func(t *testing.T) {
-		mockLogin := entities.User{Email: "steven@steven.com", Password: "asdasd"}
-		_, err := repo.Login(mockLogin)
-		assert.NotNil(t, err)
-	})
-}
+// 	t.Run("Login Failed", func(t *testing.T) {
+// 		mockLogin := entities.User{Email: "steven@steven.com", Password: "asdasd"}
+// 		_, err := repo.Login(mockLogin)
+// 		assert.NotNil(t, err)
+// 	})
+// }

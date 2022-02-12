@@ -6,18 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type LoginRequest struct {
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
-}
-
-type UserLoginResponseFormat struct {
-	Code    int           `json:"code"`
-	Message string        `json:"message"`
-	Data    entities.User `json:"data"`
-	Token   interface{}   `json:"token"`
-}
-
 type RegisterRequestFormat struct {
 	Nama     string `json:"nama" form:"nama"`
 	Email    string `json:"email" form:"email"`

@@ -1,11 +1,10 @@
 package task
 
 import (
+	"Project-REST-API/delivery/controllers/auth"
 	"Project-REST-API/delivery/controllers/common"
 	"Project-REST-API/entities"
-	"Project-REST-API/middlewares"
 	"Project-REST-API/repository/task"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -51,7 +50,7 @@ func (tc *TaskController) GetById() echo.HandlerFunc {
 func (tc *TaskController) TaskRegister() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		task := RegisterTaskRequestFormat{}
-		userId := int(middlewares.ExtractTokenUserId(c))
+		userId := int(auth.ExtractTokenUserId(c))
 		if err := c.Bind(&task); err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
@@ -70,7 +69,6 @@ func (tc *TaskController) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var newTask = UpdateTaskRequestFormat{}
 		taskId, _ := strconv.Atoi(c.Param("id"))
-		fmt.Println(middlewares.ExtractTokenUserId(c))
 
 		if err := c.Bind(&newTask); err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())

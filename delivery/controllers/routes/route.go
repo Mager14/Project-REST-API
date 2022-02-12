@@ -2,6 +2,7 @@ package routes
 
 import (
 	"Project-REST-API/configs"
+	"Project-REST-API/delivery/controllers/auth"
 	"Project-REST-API/delivery/controllers/project"
 	"Project-REST-API/delivery/controllers/task"
 	"Project-REST-API/delivery/controllers/user"
@@ -11,12 +12,12 @@ import (
 	m "github.com/labstack/echo/v4/middleware"
 )
 
-func RegisterPath(e *echo.Echo, uc *user.UserController, tc *task.TaskController, pc *project.ProjectController) {
+func RegisterPath(e *echo.Echo, ac *auth.AuthController, uc *user.UserController, tc *task.TaskController, pc *project.ProjectController) {
 
 	//=========================================================
 	//ROUT USERS
+	e.POST("users/login", ac.Login())
 	e.POST("users/register", uc.UserRegister())
-	e.POST("users/login", uc.Login())
 	eAuth := e.Group("")
 	eAuth.Use(m.BasicAuth(middlewares.BusicAuth))
 	eAuth.GET("users", uc.Get())
