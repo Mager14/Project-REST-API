@@ -55,7 +55,7 @@ func (tc *TaskController) TaskRegister() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
-		res, err := tc.repo.TaskRegister(entities.Task{Nama: task.Nama, Priority: task.Priority, User_ID: userId, Project_ID: task.Project_ID})
+		res, err := tc.repo.TaskRegister(entities.Task{Nama: task.Nama, Priority: task.Priority, User_ID: userId, Project_ID: task.Project_ID, Status: -1})
 
 		if err != nil {
 			return c.JSON(http.StatusNotFound, common.InternalServerError())
@@ -111,6 +111,7 @@ func (tc *TaskController) TaskCompleted() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Get Taks", res))
 	}
 }
+
 // func (tc *TaskController) TaskReopen() echo.HandlerFunc {
 // 	return func(c echo.Context) error {
 // 		task := RegisterTaskRequestFormat{}
