@@ -47,15 +47,6 @@ func (ur *UserRepository) UserRegister(u entities.User) (entities.User, error) {
 	return u, nil
 }
 
-func (ur *UserRepository) Login(u entities.User) (entities.User, error) {
-	var user entities.User
-	if err := ur.database.Where("email= ? AND password= ?", u.Email, u.Password).First(&user).Error; err != nil {
-		return user, err
-	}
-
-	return user, nil
-}
-
 func (ur *UserRepository) Update(userId int, newUser entities.User) (entities.User, error) {
 
 	var user entities.User

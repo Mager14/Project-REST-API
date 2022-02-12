@@ -3,9 +3,7 @@ package project
 import (
 	"Project-REST-API/delivery/controllers/common"
 	"Project-REST-API/entities"
-	"Project-REST-API/middlewares"
 	"Project-REST-API/repository/project"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -70,7 +68,6 @@ func (tc *ProjectController) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var newProject = UpdateProjectRequestFormat{}
 		projectId, _ := strconv.Atoi(c.Param("id"))
-		fmt.Println(middlewares.ExtractTokenUserId(c))
 
 		if err := c.Bind(&newProject); err != nil {
 			return c.JSON(http.StatusBadRequest, common.BadRequest())

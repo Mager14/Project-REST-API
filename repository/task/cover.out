@@ -1,0 +1,17 @@
+mode: set
+Project-REST-API/repository/task/task.go:13.39,17.2 1 1
+Project-REST-API/repository/task/task.go:19.58,22.57 2 1
+Project-REST-API/repository/task/task.go:26.2,26.21 1 1
+Project-REST-API/repository/task/task.go:22.57,24.3 1 1
+Project-REST-API/repository/task/task.go:29.70,32.66 2 1
+Project-REST-API/repository/task/task.go:36.2,36.21 1 1
+Project-REST-API/repository/task/task.go:32.66,34.3 1 1
+Project-REST-API/repository/task/task.go:39.80,40.53 1 1
+Project-REST-API/repository/task/task.go:44.2,44.15 1 1
+Project-REST-API/repository/task/task.go:40.53,42.3 1 1
+Project-REST-API/repository/task/task.go:47.92,52.73 3 1
+Project-REST-API/repository/task/task.go:56.2,56.18 1 1
+Project-REST-API/repository/task/task.go:52.73,54.3 1 1
+Project-REST-API/repository/task/task.go:59.52,63.63 2 1
+Project-REST-API/repository/task/task.go:66.2,67.12 2 1
+Project-REST-API/repository/task/task.go:63.63,65.3 1 1
