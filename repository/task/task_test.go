@@ -3,6 +3,8 @@ package task
 import (
 	"Project-REST-API/configs"
 	"Project-REST-API/entities"
+	projectRepo "Project-REST-API/repository/project"
+	userRepo "Project-REST-API/repository/user"
 	"Project-REST-API/utils"
 	"testing"
 
@@ -10,25 +12,43 @@ import (
 	"gorm.io/gorm"
 )
 
+func Dumy() {
+	config := configs.GetConfig()
+
+	db := utils.InitDB(config)
+
+	db.Migrator().DropTable(&entities.User{}, &entities.Project{})
+	db.AutoMigrate(&entities.User{}, &entities.Project{})
+	userRepo := userRepo.New(db)
+	projectRepo := projectRepo.New(db)
+
+	mockUser := entities.User{Nama: "Steven", Email: "test@gmail.com", Password: "test"}
+	userRepo.UserRegister(mockUser)
+	mockProject := entities.Project{Nama: "Steven"}
+	userRepo.UserRegister(mockUser)
+	projectRepo.ProjectRegister(mockProject)
+}
 func TestInsert(t *testing.T) {
 	config := configs.GetConfig()
 
 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.Task{})
-	db.AutoMigrate(&entities.Task{})
+	db.Migrator().DropTable(&entities.Task{}, &entities.User{}, &entities.Project{})
+	db.AutoMigrate(&entities.Task{}, &entities.User{}, &entities.Project{})
 
 	repo := New(db)
 
+	Dumy()
+
 	t.Run("Success Creating Task", func(t *testing.T) {
-		mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1}
+		mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1, Status: -1}
 		res, err := repo.TaskRegister(mockTask)
 		assert.Nil(t, err)
 		assert.Equal(t, 1, int(res.ID))
 	})
 
 	t.Run("Fail Creating Task", func(t *testing.T) {
-		mockTask := entities.Task{Model: gorm.Model{ID: 1}, Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1}
+		mockTask := entities.Task{Model: gorm.Model{ID: 1}, Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1, Status: -1}
 		_, err := repo.TaskRegister(mockTask)
 		assert.NotNil(t, err)
 	})
@@ -43,7 +63,7 @@ func TestGet(t *testing.T) {
 	db.AutoMigrate(&entities.Task{})
 
 	repo := New(db)
-	mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1}
+	mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1, Status: -1}
 	db.Create(&mockTask)
 
 	t.Run("Success Getting Task", func(t *testing.T) {
@@ -69,7 +89,7 @@ func TestGetById(t *testing.T) {
 	db.AutoMigrate(&entities.Task{})
 
 	repo := New(db)
-	mockTask := entities.Task{Nama: "Mawan", Priority: 1, User_ID: 1, Project_ID: 1}
+	mockTask := entities.Task{Nama: "Mawan", Priority: 1, User_ID: 1, Project_ID: 1, Status: -1}
 	db.Create(&mockTask)
 
 	t.Run("Success Getting Task by ID", func(t *testing.T) {
@@ -95,18 +115,18 @@ func TestUpdate(t *testing.T) {
 	db.AutoMigrate(&entities.Task{})
 
 	repo := New(db)
-	mockTask := entities.Task{Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1}
+	mockTask := entities.Task{Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1, Status: -1}
 	db.Create(&mockTask)
 
 	t.Run("Success Update Task", func(t *testing.T) {
-		mockUpdate := entities.Task{Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1}
+		mockUpdate := entities.Task{Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1, Status: -1}
 		res, err := repo.Update(1, mockUpdate)
 		assert.Nil(t, err)
 		assert.Equal(t, mockUpdate.Nama, res.Nama)
 	})
 
 	t.Run("Fail Update Task", func(t *testing.T) {
-		mockUpdate := entities.Task{Model: gorm.Model{ID: 1}, Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1}
+		mockUpdate := entities.Task{Model: gorm.Model{ID: 1}, Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1, Status: -1}
 		_, err := repo.Update(2, mockUpdate)
 		assert.NotNil(t, err)
 	})
@@ -121,7 +141,7 @@ func TestDelete(t *testing.T) {
 	db.AutoMigrate(&entities.Task{})
 
 	repo := New(db)
-	mockTask := entities.Task{Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1}
+	mockTask := entities.Task{Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1, Status: -1}
 	db.Create(&mockTask)
 
 	t.Run("Success Deleting Task ID", func(t *testing.T) {

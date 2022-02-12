@@ -12,9 +12,9 @@ import (
 type RegisterTaskRequestFormat struct {
 	Nama       string `json:"nama" form:"nama"`
 	Priority   int    `json:"priority" form:"priority"`
-	User_ID    int    `json:"user_id" form:"user_id"`
 	Project_ID int    `json:"project_id" form:"project_id"`
 }
+
 // type CompletedTaskRequestFormat struct {
 // 	gorm.Model
 // 	Nama       string `json:"nama" form:"nama"`
@@ -22,9 +22,9 @@ type RegisterTaskRequestFormat struct {
 // }
 type ReopenTaskRequestFormat struct {
 	gorm.Model
-	Nama       string `json:"nama" form:"nama"`
-	Priority   int    `json:"priority" form:"priority"`
-	Status     string `json:"status" form:"status"`
+	Nama     string `json:"nama" form:"nama"`
+	Priority int    `json:"priority" form:"priority"`
+	Status   int    `json:"status" form:"status"`
 }
 type UpdateTaskRequestFormat struct {
 	gorm.Model
