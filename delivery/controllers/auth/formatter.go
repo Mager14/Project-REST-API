@@ -8,7 +8,7 @@ type LoginRequest struct {
 }
 
 type UserLoginResponseFormat struct {
-	// Code    int           `json:"code"`
+	Code    int           `json:"code"`
 	Message string        `json:"message"`
 	Data    entities.User `json:"data"`
 	Token   interface{}   `json:"token"`
