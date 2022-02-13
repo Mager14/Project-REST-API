@@ -13,6 +13,10 @@ type UserLoginResponseFormat struct {
 	Data    entities.User `json:"data"`
 	Token   string        `json:"token"`
 }
+type FailedLoginResponseFormat struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
 
 // type LoginRequestFormat struct {
 // 	Name string `json:"name" form:"name"`
