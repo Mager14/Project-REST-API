@@ -31,8 +31,10 @@ func (ur *UserRepository) GetById(userId int) (entities.User, error) {
 	// var artikel models.Artikel
 
 	// Conn.Preload("Komentar").Find(&artikle)
+	result := ur.database.Preload("Task").Where("ID = ?", userId).First(&arrUser)
+	// if err := ur.database.Preload("Task").Find(&arrUser, userId).Error; err != nil {
 
-	if err := ur.database.Preload("Task").Find(&arrUser, userId).Error; err != nil {
+	if err := result.Error; err != nil {
 		return arrUser, err
 	}
 
