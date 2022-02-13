@@ -42,7 +42,7 @@ func TestInsert(t *testing.T) {
 	t.Run("Success Creating Task", func(t *testing.T) {
 		mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1, Status: -1}
 		res, err := repo.TaskRegister(mockTask)
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 		assert.Equal(t, 1, int(res.ID))
 	})
 
@@ -67,7 +67,7 @@ func TestGet(t *testing.T) {
 
 	t.Run("Success Getting Task", func(t *testing.T) {
 		res, err := repo.Get()
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 		assert.Equal(t, mockTask.Nama, res[0].Nama)
 	})
 

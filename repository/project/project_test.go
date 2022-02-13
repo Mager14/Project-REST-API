@@ -77,7 +77,7 @@ func TestGetById(t *testing.T) {
 
 	t.Run("Success Getting Project by ID", func(t *testing.T) {
 		res, err := repo.GetById(int(mockProject.ID))
-		assert.Nil(t, err)
+		assert.Equal(t,nil, err)
 		assert.Equal(t, mockProject.Nama, res.Nama)
 	})
 
