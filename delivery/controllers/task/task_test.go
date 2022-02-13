@@ -1,95 +1,201 @@
 package task
 
 import (
+	"Project-REST-API/configs"
+	"Project-REST-API/delivery/controllers/auth"
 	"Project-REST-API/entities"
 	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/labstack/echo/v4"
+	m "github.com/labstack/echo/v4/middleware"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGet(t *testing.T) {
+	jwtToken := ""
+	t.Run("Test Login", func(t *testing.T) {
+		e := echo.New()
 
-	t.Run("ErrorGetUser", func(t *testing.T) {
+		requestBody, _ := json.Marshal(map[string]string{
+			"email":    "test@gmail.com",
+			"password": "xyz",
+		})
+
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
+		res := httptest.NewRecorder()
+
+		req.Header.Set("Content-Type", "application/json")
+		context := e.NewContext(req, res)
+		context.SetPath("users/login")
+
+		authControl := auth.New(mockAuthRepository{})
+		authControl.Login()(context)
+
+		responses := auth.UserLoginResponseFormat{}
+		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
+
+		jwtToken = responses.Token
+		assert.Equal(t, responses.Message, "success login")
+	})
+
+	t.Run("GetUser", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
+
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks")
 
 		taskController := New(MockTaskRepository{})
-		taskController.Get()(context)
+		// taskController.Get()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(taskController.Get())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		var response GetTasksResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
-		assert.Equal(t, "Taskku", response.Data[0].Nama)
-		//
+		assert.Equal(t, 200, response.Code)
+
 	})
 	t.Run("ErrorGetUser", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
 
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks")
 
 		falsetaskController := New(MockFalseTaskRepository{})
-		falsetaskController.Get()(context)
+		// falsetaskController.Get()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(falsetaskController.Get())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		var response GetTaskResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
-		assert.Equal(t, response.Message, "There is some error on server")
+		assert.Equal(t, 500, response.Code)
+		assert.Equal(t, "There is some error on server", response.Message)
 	})
 
 }
 
 func TestGetById(t *testing.T) {
+	jwtToken := ""
+	t.Run("Test Login", func(t *testing.T) {
+		e := echo.New()
+
+		requestBody, _ := json.Marshal(map[string]string{
+			"email":    "test@gmail.com",
+			"password": "xyz",
+		})
+
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
+		res := httptest.NewRecorder()
+
+		req.Header.Set("Content-Type", "application/json")
+		context := e.NewContext(req, res)
+		context.SetPath("users/login")
+
+		authControl := auth.New(mockAuthRepository{})
+		authControl.Login()(context)
+
+		responses := auth.UserLoginResponseFormat{}
+		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
+
+		jwtToken = responses.Token
+		assert.Equal(t, responses.Message, "success login")
+	})
 	t.Run("GetById", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks/:id")
 
 		taskController := New(&MockTaskRepository{})
-		taskController.GetById()(context)
+		// taskController.GetById()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(taskController.GetById())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := GetTaskResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		assert.Equal(t, 200, response.Code)
-		assert.Equal(t, "Taskku", response.Data.Nama)
+		assert.Equal(t, "Success Get Taks Id", response.Message)
 
 	})
 	t.Run("ErorGetById", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
 
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks/:id")
 
 		falsetaskController := New(MockFalseTaskRepository{})
-		falsetaskController.GetById()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(falsetaskController.GetById())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		var response GetTaskResponseFormat
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
-		assert.Equal(t, response.Message, "not found")
+		assert.Equal(t, 404, response.Code)
+		assert.Equal(t, "not found", response.Message)
 	})
 
 }
 
 func TestTaskRegister(t *testing.T) {
+	jwtToken := ""
+	t.Run("Test Login", func(t *testing.T) {
+		e := echo.New()
+
+		requestBody, _ := json.Marshal(map[string]string{
+			"email":    "test@gmail.com",
+			"password": "xyz",
+		})
+
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
+		res := httptest.NewRecorder()
+
+		req.Header.Set("Content-Type", "application/json")
+		context := e.NewContext(req, res)
+		context.SetPath("users/login")
+
+		authControl := auth.New(mockAuthRepository{})
+		authControl.Login()(context)
+
+		responses := auth.UserLoginResponseFormat{}
+		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
+
+		jwtToken = responses.Token
+		assert.Equal(t, responses.Message, "success login")
+	})
+
 	t.Run("TaskRegister", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
@@ -101,29 +207,48 @@ func TestTaskRegister(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks/register")
 
 		taskController := New(MockTaskRepository{})
-		taskController.TaskRegister()(context)
+		// taskController.TaskRegister()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(taskController.TaskRegister())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := RegisterTaskResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
-		// assert.Equal(t, 201, response.Code)
-		assert.Equal(t, "Taskku", response.Data.Nama)
+		assert.Equal(t, http.StatusCreated, response.Code)
 
 	})
 	t.Run("ErorTaskRegister", func(t *testing.T) {
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		requestBody, _ := json.Marshal(map[string]interface{}{
+			"namagh":     "Taskku",
+			"priority":   1,
+			"user_ID":    1,
+			"project_ID": 1,
+		})
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
+
 		res := httptest.NewRecorder()
+
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
+
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks/register")
 
-		userController := New(MockFalseTaskRepository{})
-		userController.TaskRegister()(context)
+		taskController := New(MockFalseTaskRepository{})
+		// userController.TaskRegister()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(taskController.TaskRegister())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := RegisterTaskResponseFormat{}
 
@@ -143,26 +268,57 @@ func TestTaskRegister(t *testing.T) {
 			"project_ID": "test",
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
-		fmt.Println(req)
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks/register")
 
-		userController := New(MockFalseTaskRepository{})
-		userController.TaskRegister()(context)
+		taskController := New(MockFalseTaskRepository{})
+		// userController.TaskRegister()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(taskController.TaskRegister())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := RegisterTaskResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		assert.Equal(t, 400, response.Code)
+		assert.Equal(t, "There is some problem from input", response.Message)
 
 	})
 
 }
 
 func TestUpdate(t *testing.T) {
+	jwtToken := ""
+	t.Run("Test Login", func(t *testing.T) {
+		e := echo.New()
+
+		requestBody, _ := json.Marshal(map[string]string{
+			"email":    "test@gmail.com",
+			"password": "xyz",
+		})
+
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
+		res := httptest.NewRecorder()
+
+		req.Header.Set("Content-Type", "application/json")
+		context := e.NewContext(req, res)
+		context.SetPath("users/login")
+
+		authControl := auth.New(mockAuthRepository{})
+		authControl.Login()(context)
+
+		responses := auth.UserLoginResponseFormat{}
+		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
+
+		jwtToken = responses.Token
+		assert.Equal(t, responses.Message, "success login")
+	})
+
 	t.Run("Update Task", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
@@ -172,40 +328,54 @@ func TestUpdate(t *testing.T) {
 			"project_id": 1,
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
-
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks/:id")
 
 		taskController := New(&MockTaskRepository{})
-		taskController.Update()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(taskController.Update())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := UpdateResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		assert.Equal(t, 200, response.Code)
-		assert.Equal(t, "Taskku", response.Data.Nama)
+		assert.Equal(t, "Success Update Task", response.Message)
 
 	})
 
 	t.Run("ErrorUpdateTask", func(t *testing.T) {
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodPut, "/", nil)
+		requestBody, _ := json.Marshal(map[string]interface{}{
+			"name":       "Taskku",
+			"priority":   12,
+			"user_id":    1,
+			"project_id": 1,
+		})
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks/:id")
 
 		taskController := New(&MockFalseTaskRepository{})
-		taskController.Update()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(taskController.Update())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := UpdateResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
-		assert.Equal(t, 500, response.Code)
-		assert.Equal(t, "There is some error on server", response.Message)
+		assert.Equal(t, 404, response.Code)
+		assert.Equal(t, "not found", response.Message)
 
 	})
 	t.Run("UpdateBind", func(t *testing.T) {
@@ -215,41 +385,76 @@ func TestUpdate(t *testing.T) {
 			"priority": "12",
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
-
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks/:id")
 
-		tastController := New(&MockFalseTaskRepository{})
-		tastController.Update()(context)
+		taskController := New(&MockFalseTaskRepository{})
+		if err := m.JWT([]byte(configs.JWT_SECRET))(taskController.Update())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := UpdateResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		assert.Equal(t, 400, response.Code)
+		assert.Equal(t, "There is some problem from input", response.Message)
 
 	})
 }
 
 func TestDelete(t *testing.T) {
+	jwtToken := ""
+	t.Run("Test Login", func(t *testing.T) {
+		e := echo.New()
+
+		requestBody, _ := json.Marshal(map[string]string{
+			"email":    "test@gmail.com",
+			"password": "xyz",
+		})
+
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
+		res := httptest.NewRecorder()
+
+		req.Header.Set("Content-Type", "application/json")
+		context := e.NewContext(req, res)
+		context.SetPath("users/login")
+
+		authControl := auth.New(mockAuthRepository{})
+		authControl.Login()(context)
+
+		responses := auth.UserLoginResponseFormat{}
+		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
+
+		jwtToken = responses.Token
+		assert.Equal(t, responses.Message, "success login")
+	})
 	t.Run("DeleteTask", func(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks/:id")
 
 		taskController := New(&MockTaskRepository{})
-		taskController.Delete()(context)
+		// taskController.Delete()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(taskController.Delete())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := DeleteResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		assert.Equal(t, 200, response.Code)
-		assert.Equal(t, nil, response.Data)
+		assert.Equal(t, "Success Delete Task", response.Message)
 
 	})
 
@@ -257,18 +462,23 @@ func TestDelete(t *testing.T) {
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/", nil)
 		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
 		context := e.NewContext(req, res)
 		context.SetPath("/tasks/:id")
 
-		userController := New(&MockFalseTaskRepository{})
-		userController.Delete()(context)
+		taskController := New(&MockFalseTaskRepository{})
+		if err := m.JWT([]byte(configs.JWT_SECRET))(taskController.Delete())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := DeleteResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
-		assert.Equal(t, 500, response.Code)
-		assert.Equal(t, "There is some error on server", response.Message)
+		assert.Equal(t, 404, response.Code)
+		assert.Equal(t, "not found", response.Message)
 
 	})
 }
@@ -313,4 +523,12 @@ func (m MockFalseTaskRepository) Update(taskId int, newTask entities.Task) (enti
 }
 func (m MockFalseTaskRepository) Delete(taskId int) error {
 	return errors.New("False Delete Object")
+}
+
+//MOCK AUTH
+
+type mockAuthRepository struct{}
+
+func (ma mockAuthRepository) Login(email, Password string) (entities.User, error) {
+	return entities.User{Email: "test@gmail.com", Password: "xyz"}, nil
 }

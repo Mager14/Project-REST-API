@@ -43,7 +43,7 @@ func (tc *TaskController) GetById() echo.HandlerFunc {
 			return c.JSON(http.StatusNotFound, common.NotFound(http.StatusNotFound, "not found", nil))
 		}
 
-		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Get Taks", res))
+		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Get Taks Id", res))
 	}
 }
 
@@ -58,7 +58,7 @@ func (tc *TaskController) TaskRegister() echo.HandlerFunc {
 		res, err := tc.repo.TaskRegister(entities.Task{Nama: task.Nama, Priority: task.Priority, User_ID: userId, Project_ID: task.Project_ID, Status: -1})
 
 		if err != nil {
-			return c.JSON(http.StatusNotFound, common.InternalServerError())
+			return c.JSON(http.StatusInternalServerError, common.InternalServerError())
 		}
 
 		return c.JSON(http.StatusCreated, common.Success(http.StatusCreated, "Success Create Task", res))
@@ -77,7 +77,7 @@ func (tc *TaskController) Update() echo.HandlerFunc {
 		res, err := tc.repo.Update(taskId, entities.Task{Nama: newTask.Nama, Priority: newTask.Priority})
 
 		if err != nil {
-			return c.JSON(http.StatusNotFound, common.InternalServerError())
+			return c.JSON(http.StatusNotFound, common.NotFound(http.StatusNotFound, "not found", nil))
 		}
 
 		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Update Task", res))
@@ -91,26 +91,26 @@ func (tc *TaskController) Delete() echo.HandlerFunc {
 		err := tc.repo.Delete(taskId)
 
 		if err != nil {
-			return c.JSON(http.StatusNotFound, common.InternalServerError())
+			return c.JSON(http.StatusNotFound, common.NotFound(http.StatusNotFound, "not found", nil))
 		}
 
 		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Delete Task", nil))
 	}
 }
 
-func (tc *TaskController) TaskCompleted() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		taskId, _ := strconv.Atoi(c.Param("id"))
+// func (tc *TaskController) TaskCompleted() echo.HandlerFunc {
+// 	return func(c echo.Context) error {
+// 		taskId, _ := strconv.Atoi(c.Param("id"))
 
-		res, err := tc.repo.GetById(taskId)
+// 		res, err := tc.repo.GetById(taskId)
 
-		if err != nil {
-			return c.JSON(http.StatusNotFound, common.NotFound(http.StatusNotFound, "not found", nil))
-		}
+// 		if err != nil {
+// 			return c.JSON(http.StatusNotFound, common.NotFound(http.StatusNotFound, "not found", nil))
+// 		}
 
-		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Get Taks", res))
-	}
-}
+// 		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Get Taks", res))
+// 	}
+// }
 
 // func (tc *TaskController) TaskReopen() echo.HandlerFunc {
 // 	return func(c echo.Context) error {
