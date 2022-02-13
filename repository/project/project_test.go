@@ -26,7 +26,7 @@ func TestInsert(t *testing.T) {
 	t.Run("Success Creating Project", func(t *testing.T) {
 		mockProject := entities.Project{Nama: "Project1"}
 		res, err := repo.ProjectRegister(mockProject)
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 		assert.Equal(t, 1, int(res.ID))
 	})
 
@@ -51,7 +51,7 @@ func TestGet(t *testing.T) {
 
 	t.Run("Success Getting Project", func(t *testing.T) {
 		res, err := repo.Get()
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 		assert.Equal(t, mockProject.Nama, res[0].Nama)
 	})
 
@@ -104,7 +104,7 @@ func TestUpdate(t *testing.T) {
 	t.Run("Success Update Project", func(t *testing.T) {
 		mockUpdate := entities.Project{Nama: "Project1"}
 		res, err := repo.Update(1, mockUpdate)
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 		assert.Equal(t, mockUpdate.Nama, res.Nama)
 	})
 
@@ -129,7 +129,7 @@ func TestDelete(t *testing.T) {
 
 	t.Run("Success Deleting Project ID", func(t *testing.T) {
 		err := repo.Delete(int(mockProject.ID))
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 	})
 
 	db.Migrator().DropTable(&entities.Project{})
