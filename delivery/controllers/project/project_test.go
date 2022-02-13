@@ -1,16 +1,20 @@
 package project
 
 import (
+	"Project-REST-API/configs"
+	"Project-REST-API/delivery/controllers/auth"
 	"Project-REST-API/entities"
 	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/labstack/echo/v4"
+	m "github.com/labstack/echo/v4/middleware"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -90,6 +94,33 @@ func TestGetById(t *testing.T) {
 }
 
 func TestProjectRegister(t *testing.T) {
+
+	jwtToken := ""
+	t.Run("Test Login", func(t *testing.T) {
+		e := echo.New()
+
+		requestBody, _ := json.Marshal(map[string]string{
+			"email":    "test@gmail.com",
+			"password": "xyz",
+		})
+
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
+		res := httptest.NewRecorder()
+
+		req.Header.Set("Content-Type", "application/json")
+		context := e.NewContext(req, res)
+		context.SetPath("users/login")
+
+		authControl := auth.New(mockAuthRepository{})
+		authControl.Login()(context)
+
+		responses := auth.UserLoginResponseFormat{}
+		json.Unmarshal([]byte(res.Body.Bytes()), &responses)
+
+		jwtToken = responses.Token
+		assert.Equal(t, responses.Message, "success login")
+	})
+
 	t.Run("ProjectRegister", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
@@ -98,35 +129,48 @@ func TestProjectRegister(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
+
 		context := e.NewContext(req, res)
 		context.SetPath("/projects/register")
 
 		projectController := New(MockProjectRepository{})
-		projectController.ProjectRegister()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(projectController.ProjectRegister())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := RegisterProjectResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
-		// assert.Equal(t, 201, response.Code)
-		assert.Equal(t, "ProjectKu", response.Data.Nama)
+		assert.Equal(t, http.StatusCreated, response.Code)
 
 	})
 	t.Run("ErorProjectRegister", func(t *testing.T) {
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		requestBody, _ := json.Marshal(map[string]interface{}{
+			"ed": 1,
+		})
+		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
 		res := httptest.NewRecorder()
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", jwtToken))
+
 		context := e.NewContext(req, res)
 		context.SetPath("/projects/register")
 
 		projectController := New(MockFalseProjectRepository{})
-		projectController.ProjectRegister()(context)
+		if err := m.JWT([]byte(configs.JWT_SECRET))(projectController.ProjectRegister())(context); err != nil {
+			log.Fatal(err)
+			return
+		}
 
 		response := RegisterProjectResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
-		assert.Equal(t, 500, response.Code)
+		assert.Equal(t, http.StatusInternalServerError, response.Code)
 		assert.Equal(t, "There is some error on server", response.Message)
 
 	})
@@ -303,4 +347,12 @@ func (m MockFalseProjectRepository) Update(project_id int, newProject entities.P
 }
 func (m MockFalseProjectRepository) Delete(project_id int) error {
 	return errors.New("False Delete Object")
+}
+
+//MOCK AUTH
+
+type mockAuthRepository struct{}
+
+func (ma mockAuthRepository) Login(email, Password string) (entities.User, error) {
+	return entities.User{Email: "test@gmail.com", Password: "xyz"}, nil
 }

@@ -29,18 +29,18 @@ func RegisterPath(e *echo.Echo, ac *auth.AuthController, uc *user.UserController
 	//ROUTE TASK
 	eTask := e.Group("todo/")
 	eTask.Use(m.JWT([]byte(configs.JWT_SECRET)))
-	eTask.POST("task/register", tc.TaskRegister())
-	eTask.GET("task", tc.Get())
-	eTask.GET("task/:id", tc.GetById())
-	eTask.PUT("task/:id", tc.Update())
-	eTask.DELETE("task/:id", tc.Delete())
+	eTask.POST("tasks/register", tc.TaskRegister())
+	eTask.GET("tasks", tc.Get())
+	eTask.GET("tasks/:id", tc.GetById())
+	eTask.PUT("tasks/:id", tc.Update())
+	eTask.DELETE("tasks/:id", tc.Delete())
 	// e.POST("task/:id/completed", tc.TaskCompleted())
 	// e.POST("task/:id/reopen", tc.TaskReopen())
 
 	//===========================================================
 	//ROUTE PROJECT
-	e.POST("projects/register", pc.ProjectRegister())
 	eProject := e.Group("")
+	e.POST("projects/register", pc.ProjectRegister())
 	eProject.Use(m.JWT([]byte(configs.JWT_SECRET)))
 	eProject.GET("projects", pc.Get())
 	eProject.GET("projects/:id", pc.GetById())

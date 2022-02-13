@@ -21,7 +21,7 @@ func TestGet(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/users")
+		context.SetPath("/tasks")
 
 		taskController := New(MockTaskRepository{})
 		taskController.Get()(context)
@@ -38,7 +38,7 @@ func TestGet(t *testing.T) {
 		res := httptest.NewRecorder()
 
 		context := e.NewContext(req, res)
-		context.SetPath("/users")
+		context.SetPath("/tasks")
 
 		falsetaskController := New(MockFalseTaskRepository{})
 		falsetaskController.Get()(context)
@@ -57,7 +57,7 @@ func TestGetById(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/users/:id")
+		context.SetPath("/tasks/:id")
 
 		taskController := New(&MockTaskRepository{})
 		taskController.GetById()(context)
@@ -76,7 +76,7 @@ func TestGetById(t *testing.T) {
 		res := httptest.NewRecorder()
 
 		context := e.NewContext(req, res)
-		context.SetPath("/users/:id")
+		context.SetPath("/tasks/:id")
 
 		falsetaskController := New(MockFalseTaskRepository{})
 		falsetaskController.GetById()(context)
@@ -102,7 +102,7 @@ func TestTaskRegister(t *testing.T) {
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/task/register")
+		context.SetPath("/tasks/register")
 
 		taskController := New(MockTaskRepository{})
 		taskController.TaskRegister()(context)
@@ -176,7 +176,7 @@ func TestUpdate(t *testing.T) {
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/task/:id")
+		context.SetPath("/tasks/:id")
 
 		taskController := New(&MockTaskRepository{})
 		taskController.Update()(context)
@@ -195,7 +195,7 @@ func TestUpdate(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPut, "/", nil)
 		res := httptest.NewRecorder()
 		context := e.NewContext(req, res)
-		context.SetPath("/task/:id")
+		context.SetPath("/tasks/:id")
 
 		taskController := New(&MockFalseTaskRepository{})
 		taskController.Update()(context)
@@ -219,7 +219,7 @@ func TestUpdate(t *testing.T) {
 		res := httptest.NewRecorder()
 		req.Header.Set("Content-Type", "application/json")
 		context := e.NewContext(req, res)
-		context.SetPath("/task/:id")
+		context.SetPath("/tasks/:id")
 
 		tastController := New(&MockFalseTaskRepository{})
 		tastController.Update()(context)

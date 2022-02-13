@@ -29,6 +29,7 @@ func TestGet(t *testing.T) {
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 		assert.Equal(t, "Adlan", response.Data[0].Nama)
+		assert.Equal(t, http.StatusOK, response.Code)
 		//
 	})
 	t.Run("ErrorGetUser", func(t *testing.T) {
@@ -92,7 +93,7 @@ func TestUserRegister(t *testing.T) {
 	t.Run("UserRegister", func(t *testing.T) {
 		e := echo.New()
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"name":     "Adlan",
+			"nama":     "Adlan",
 			"email":    "adlan@adlan.com",
 			"password": "adlan123",
 		})
@@ -103,14 +104,15 @@ func TestUserRegister(t *testing.T) {
 		context.SetPath("/users")
 
 		userController := New(MockUserRepository{})
+
 		userController.UserRegister()(context)
 
 		response := RegisterUserResponseFormat{}
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
-
 		// assert.Equal(t, 201, response.Code)
 		assert.Equal(t, "Adlan", response.Data.Nama)
+		assert.Equal(t, http.StatusCreated, response.Code)
 
 	})
 	t.Run("ErorUserRegister", func(t *testing.T) {

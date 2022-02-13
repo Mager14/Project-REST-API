@@ -57,7 +57,7 @@ func (tc *ProjectController) ProjectRegister() echo.HandlerFunc {
 		res, err := tc.repo.ProjectRegister(entities.Project{Nama: project.Nama})
 
 		if err != nil {
-			return c.JSON(http.StatusNotFound, common.InternalServerError())
+			return c.JSON(http.StatusInternalServerError, common.InternalServerError())
 		}
 
 		return c.JSON(http.StatusCreated, common.Success(http.StatusCreated, "Success Create Project", res))
