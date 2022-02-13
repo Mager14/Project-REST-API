@@ -15,6 +15,8 @@ func TestInsert(t *testing.T) {
 
 	db := utils.InitDB(config)
 
+	db.Migrator().DropTable(&entities.Task{})
+	db.AutoMigrate(&entities.Task{})
 	db.Migrator().DropTable(&entities.User{})
 	db.AutoMigrate(&entities.User{})
 
@@ -53,6 +55,7 @@ func TestGet(t *testing.T) {
 	})
 
 	db.Migrator().DropTable(&entities.User{})
+	// db.AutoMigrate(&entities.User{})
 
 	t.Run("Fail Getting User", func(t *testing.T) {
 		_, err := repo.Get()
@@ -79,6 +82,7 @@ func TestGetById(t *testing.T) {
 	})
 
 	db.Migrator().DropTable(&entities.User{})
+	db.AutoMigrate(&entities.User{})
 
 	t.Run("Fail Getting User ID", func(t *testing.T) {
 		_, err := repo.GetById(int(mockUser.ID))
@@ -130,35 +134,10 @@ func TestDelete(t *testing.T) {
 	})
 
 	db.Migrator().DropTable(&entities.User{})
+	db.AutoMigrate(&entities.User{})
 
 	t.Run("Fail Getting User ID", func(t *testing.T) {
 		err := repo.Delete(int(mockUser.ID))
 		assert.NotNil(t, err)
 	})
 }
-
-// func TestLogin(t *testing.T) {
-// 	config := configs.GetConfig()
-
-// 	db := utils.InitDB(config)
-
-// 	db.Migrator().DropTable(&entities.User{})
-// 	db.AutoMigrate(&entities.User{})
-
-// 	repo := New(db)
-// 	mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
-// 	db.Create(&mockUser)
-
-// 	t.Run("Success Login", func(t *testing.T) {
-// 		mockLogin := entities.User{Email: "steven@steven.com", Password: "steven123"}
-// 		res, err := repo.Login(mockLogin)
-// 		assert.Nil(t, err)
-// 		assert.Equal(t, 1, int(res.ID))
-// 	})
-
-// 	t.Run("Login Failed", func(t *testing.T) {
-// 		mockLogin := entities.User{Email: "steven@steven.com", Password: "asdasd"}
-// 		_, err := repo.Login(mockLogin)
-// 		assert.NotNil(t, err)
-// 	})
-// }
