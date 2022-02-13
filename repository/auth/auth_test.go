@@ -27,7 +27,7 @@ func TestLogin(t *testing.T) {
 		res, err := repo.Login(mockUser.Email, mockUser.Password)
 		fmt.Println(res)
 		assert.Equal(t, nil, err)
-		assert.Equal(t, 1, int(res.ID))
+		assert.Equal(t, "steven@steven.com", res.Email)
 	})
 
 	t.Run("Fail Login", func(t *testing.T) {

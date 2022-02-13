@@ -12,21 +12,21 @@ import (
 	"gorm.io/gorm"
 )
 
-func Dumy() {
-	config := configs.GetConfig()
+// func Dumy() {
+// 	config := configs.GetConfig()
 
-	db := utils.InitDB(config)
+// 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.User{}, &entities.Project{})
-	db.AutoMigrate(&entities.User{}, &entities.Project{})
-	userRepo := userRepo.New(db)
-	projectRepo := projectRepo.New(db)
+// 	db.Migrator().DropTable(&entities.User{}, &entities.Project{})
+// 	db.AutoMigrate(&entities.User{}, &entities.Project{})
+// 	userRepo := userRepo.New(db)
+// 	projectRepo := projectRepo.New(db)
 
-	mockUser := entities.User{Nama: "Steven", Email: "test@gmail.com", Password: "test"}
-	userRepo.UserRegister(mockUser)
-	mockProject := entities.Project{Nama: "Steven"}
-	projectRepo.ProjectRegister(mockProject)
-}
+// 	mockUser := entities.User{Nama: "Steven", Email: "test@gmail.com", Password: "test"}
+// 	userRepo.UserRegister(mockUser)
+// 	mockProject := entities.Project{Nama: "Steven"}
+// 	projectRepo.ProjectRegister(mockProject)
+// }
 func TestInsert(t *testing.T) {
 	config := configs.GetConfig()
 
@@ -34,10 +34,14 @@ func TestInsert(t *testing.T) {
 
 	db.Migrator().DropTable(&entities.Task{}, &entities.User{}, &entities.Project{})
 	db.AutoMigrate(&entities.Task{}, &entities.User{}, &entities.Project{})
-
+	userRepo := userRepo.New(db)
+	projectRepo := projectRepo.New(db)
 	repo := New(db)
 
-	Dumy()
+	mockUser := entities.User{Nama: "Steven", Email: "test@gmail.com", Password: "test"}
+	userRepo.UserRegister(mockUser)
+	mockProject := entities.Project{Nama: "Steven"}
+	projectRepo.ProjectRegister(mockProject)
 
 	t.Run("Success Creating Task", func(t *testing.T) {
 		mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1, Status: -1}
@@ -57,18 +61,23 @@ func TestGet(t *testing.T) {
 	config := configs.GetConfig()
 
 	db := utils.InitDB(config)
-
-	db.Migrator().DropTable(&entities.Task{})
-	db.AutoMigrate(&entities.Task{})
-
+	db.Migrator().DropTable(&entities.Task{}, &entities.User{}, &entities.Project{})
+	db.AutoMigrate(&entities.Task{}, &entities.User{}, &entities.Project{})
+	userRepo := userRepo.New(db)
+	projectRepo := projectRepo.New(db)
 	repo := New(db)
-	mockTask := entities.Task{Nama: "Steven", Priority: 1, User_ID: 1, Project_ID: 1, Status: -1}
+
+	mockUser := entities.User{Nama: "Steven", Email: "test@gmail.com", Password: "test"}
+	userRepo.UserRegister(mockUser)
+	mockProject := entities.Project{Nama: "Steven"}
+	projectRepo.ProjectRegister(mockProject)
+	mockTask := entities.Task{Nama: "TestTask", Priority: 1, User_ID: 1, Project_ID: 1, Status: -1}
 	db.Create(&mockTask)
 
 	t.Run("Success Getting Task", func(t *testing.T) {
 		res, err := repo.Get()
 		assert.Equal(t, nil, err)
-		assert.Equal(t, mockTask.Nama, res[0].Nama)
+		assert.Equal(t, "TestTask", res[0].Nama)
 	})
 
 	db.Migrator().DropTable(&entities.Task{})
@@ -84,13 +93,19 @@ func TestGetById(t *testing.T) {
 
 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.Task{})
-	db.AutoMigrate(&entities.Task{})
-
+	db.Migrator().DropTable(&entities.Task{}, &entities.User{}, &entities.Project{})
+	db.AutoMigrate(&entities.Task{}, &entities.User{}, &entities.Project{})
+	userRepo := userRepo.New(db)
+	projectRepo := projectRepo.New(db)
 	repo := New(db)
+
+	mockUser := entities.User{Nama: "Steven", Email: "test@gmail.com", Password: "test"}
+	userRepo.UserRegister(mockUser)
+	mockProject := entities.Project{Nama: "Steven"}
+	projectRepo.ProjectRegister(mockProject)
+
 	mockTask := entities.Task{Nama: "Mawan", Priority: 1, User_ID: 1, Project_ID: 1, Status: -1}
 	db.Create(&mockTask)
-
 	t.Run("Success Getting Task by ID", func(t *testing.T) {
 		res, err := repo.GetById(int(mockTask.ID))
 		assert.Equal(t, nil, err)
@@ -110,10 +125,16 @@ func TestUpdate(t *testing.T) {
 
 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.Task{})
-	db.AutoMigrate(&entities.Task{})
-
+	db.Migrator().DropTable(&entities.Task{}, &entities.User{}, &entities.Project{})
+	db.AutoMigrate(&entities.Task{}, &entities.User{}, &entities.Project{})
+	userRepo := userRepo.New(db)
+	projectRepo := projectRepo.New(db)
 	repo := New(db)
+
+	mockUser := entities.User{Nama: "Steven", Email: "test@gmail.com", Password: "test"}
+	userRepo.UserRegister(mockUser)
+	mockProject := entities.Project{Nama: "Steven"}
+	projectRepo.ProjectRegister(mockProject)
 	mockTask := entities.Task{Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1, Status: -1}
 	db.Create(&mockTask)
 
@@ -136,10 +157,16 @@ func TestDelete(t *testing.T) {
 
 	db := utils.InitDB(config)
 
-	db.Migrator().DropTable(&entities.Task{})
-	db.AutoMigrate(&entities.Task{})
-
+	db.Migrator().DropTable(&entities.Task{}, &entities.User{}, &entities.Project{})
+	db.AutoMigrate(&entities.Task{}, &entities.User{}, &entities.Project{})
+	userRepo := userRepo.New(db)
+	projectRepo := projectRepo.New(db)
 	repo := New(db)
+
+	mockUser := entities.User{Nama: "Steven", Email: "test@gmail.com", Password: "test"}
+	userRepo.UserRegister(mockUser)
+	mockProject := entities.Project{Nama: "Steven"}
+	projectRepo.ProjectRegister(mockProject)
 	mockTask := entities.Task{Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1, Status: -1}
 	db.Create(&mockTask)
 
