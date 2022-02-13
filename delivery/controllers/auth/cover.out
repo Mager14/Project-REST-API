@@ -1,0 +1,14 @@
+mode: set
+Project-REST-API/delivery/controllers/auth/auth.go:19.42,23.2 1 1
+Project-REST-API/delivery/controllers/auth/auth.go:25.50,26.36 1 1
+Project-REST-API/delivery/controllers/auth/auth.go:26.36,29.46 2 1
+Project-REST-API/delivery/controllers/auth/auth.go:33.3,35.17 2 1
+Project-REST-API/delivery/controllers/auth/auth.go:42.3,44.17 2 1
+Project-REST-API/delivery/controllers/auth/auth.go:51.3,56.5 1 1
+Project-REST-API/delivery/controllers/auth/auth.go:29.46,31.4 1 1
+Project-REST-API/delivery/controllers/auth/auth.go:35.17,40.4 1 1
+Project-REST-API/delivery/controllers/auth/auth.go:44.17,49.4 1 0
+Project-REST-API/delivery/controllers/auth/auth.go:71.56,78.2 6 1
+Project-REST-API/delivery/controllers/auth/auth.go:80.49,83.16 2 0
+Project-REST-API/delivery/controllers/auth/auth.go:89.2,89.10 1 0
+Project-REST-API/delivery/controllers/auth/auth.go:83.16,87.3 3 0

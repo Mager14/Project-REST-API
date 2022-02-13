@@ -2,6 +2,7 @@ package auth
 
 import (
 	"Project-REST-API/configs"
+	"Project-REST-API/delivery/controllers/common"
 	"Project-REST-API/entities"
 	"Project-REST-API/repository/auth"
 	"net/http"
@@ -26,22 +27,29 @@ func (a AuthController) Login() echo.HandlerFunc {
 		loginFormat := LoginRequest{}
 
 		if err := c.Bind(&loginFormat); err != nil {
-			return c.JSON(http.StatusBadRequest, "Kesalahan input file")
+			return c.JSON(http.StatusBadRequest, common.BadRequest())
 		}
 
 		checkedUser, err := a.repo.Login(loginFormat.Email, loginFormat.Password)
 
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, "there is something wrong in the system")
+			return c.JSON(http.StatusInternalServerError, FailedLoginResponseFormat{
+				Code:    http.StatusInternalServerError,
+				Message: "Login Failed",
+			})
 		}
 
 		token, err := GenerateToken(checkedUser)
 
 		if err != nil {
-			return c.JSON(http.StatusNotAcceptable, "cannot process obtained value")
+			return c.JSON(http.StatusNotAcceptable, map[string]interface{}{
+				"Code":    http.StatusNotAcceptable,
+				"message": "cannot process obtained value",
+			})
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
+			"Code":    http.StatusOK,
 			"message": "success login",
 			"data":    checkedUser,
 			"token":   token,

@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -35,12 +34,7 @@ func TestLogin(t *testing.T) {
 		context.SetPath("/users/login")
 
 		authController := New(MockAuthRepository{})
-		// authController.Login()(context)
-		if err := authController.Login()(context); err != nil {
-			log.Fatal(err)
-			return
-		}
-
+		authController.Login()(context)
 
 		response := UserLoginResponseFormat{}
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
@@ -72,8 +66,8 @@ func TestLogin(t *testing.T) {
 
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
-		assert.Equal(t, 400, response.Code)
-		assert.Equal(t, "There is some problem from input", response.Message)
+		assert.Equal(t, 500, response.Code)
+		assert.Equal(t, "Login Failed", response.Message)
 
 	})
 
@@ -81,7 +75,7 @@ func TestLogin(t *testing.T) {
 		e := echo.New()
 
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"email":    "adlan@adlan.com",
+			"name":     "testBind",
 			"password": 123,
 		})
 		req := httptest.NewRequest(http.MethodPost, "/", bytes.NewBuffer(requestBody))
@@ -99,6 +93,7 @@ func TestLogin(t *testing.T) {
 		json.Unmarshal([]byte(res.Body.Bytes()), &response)
 
 		assert.Equal(t, 400, response.Code)
+		assert.Equal(t, "There is some problem from input", response.Message)
 
 	})
 }

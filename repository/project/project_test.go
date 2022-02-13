@@ -15,6 +15,9 @@ func TestInsert(t *testing.T) {
 
 	db := utils.InitDB(config)
 
+	db.Migrator().DropTable(&entities.Task{})
+	db.AutoMigrate(&entities.Task{})
+
 	db.Migrator().DropTable(&entities.Project{})
 	db.AutoMigrate(&entities.Project{})
 
