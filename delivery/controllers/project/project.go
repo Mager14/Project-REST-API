@@ -39,7 +39,7 @@ func (tc *ProjectController) GetById() echo.HandlerFunc {
 		res, err := tc.repo.GetById(projectId)
 
 		if err != nil {
-			return c.JSON(http.StatusNotFound, common.NotFound(http.StatusNotFound, "not found", nil))
+			return c.JSON(http.StatusNotFound, common.NotFound(http.StatusNotFound, "Not Found", nil))
 		}
 
 		return c.JSON(http.StatusOK, common.Success(http.StatusOK, "Success Get Project", res))
