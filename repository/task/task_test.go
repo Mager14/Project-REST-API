@@ -25,7 +25,6 @@ func Dumy() {
 	mockUser := entities.User{Nama: "Steven", Email: "test@gmail.com", Password: "test"}
 	userRepo.UserRegister(mockUser)
 	mockProject := entities.Project{Nama: "Steven"}
-	userRepo.UserRegister(mockUser)
 	projectRepo.ProjectRegister(mockProject)
 }
 func TestInsert(t *testing.T) {
