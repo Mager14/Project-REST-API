@@ -93,7 +93,7 @@ func TestGetById(t *testing.T) {
 
 	t.Run("Success Getting Task by ID", func(t *testing.T) {
 		res, err := repo.GetById(int(mockTask.ID))
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 		assert.Equal(t, mockTask.Nama, res.Nama)
 	})
 
@@ -120,7 +120,7 @@ func TestUpdate(t *testing.T) {
 	t.Run("Success Update Task", func(t *testing.T) {
 		mockUpdate := entities.Task{Nama: "Task1", Priority: 12, User_ID: 1, Project_ID: 1, Status: -1}
 		res, err := repo.Update(1, mockUpdate)
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 		assert.Equal(t, mockUpdate.Nama, res.Nama)
 	})
 
@@ -145,7 +145,7 @@ func TestDelete(t *testing.T) {
 
 	t.Run("Success Deleting Task ID", func(t *testing.T) {
 		err := repo.Delete(int(mockTask.ID))
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 	})
 
 	db.Migrator().DropTable(&entities.Task{})

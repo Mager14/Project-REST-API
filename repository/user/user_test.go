@@ -25,8 +25,8 @@ func TestInsert(t *testing.T) {
 	t.Run("Success Create User", func(t *testing.T) {
 		mockUser := entities.User{Nama: "Steven", Email: "steven@steven.com", Password: "steven123"}
 		res, err := repo.UserRegister(mockUser)
-		assert.Nil(t, err)
-		assert.Equal(t, 1, int(res.ID))
+		assert.Equal(t, nil, err)
+		assert.Equal(t, "Steven", res.Nama)
 	})
 
 	t.Run("Fail Create User", func(t *testing.T) {
@@ -50,7 +50,7 @@ func TestGet(t *testing.T) {
 
 	t.Run("Success Getting User", func(t *testing.T) {
 		res, err := repo.Get()
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 		assert.Equal(t, mockUser.Nama, res[0].Nama)
 	})
 
@@ -77,7 +77,7 @@ func TestGetById(t *testing.T) {
 
 	t.Run("Success Getting User ID", func(t *testing.T) {
 		res, err := repo.GetById(int(mockUser.ID))
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 		assert.Equal(t, mockUser.Nama, res.Nama)
 	})
 
@@ -105,7 +105,7 @@ func TestUpdate(t *testing.T) {
 	t.Run("Success Update User", func(t *testing.T) {
 		mockUpdate := entities.User{Nama: "Testerr", Email: "steven@steven.com", Password: "steven123"}
 		res, err := repo.Update(1, mockUpdate)
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 		assert.Equal(t, mockUpdate.Nama, res.Nama)
 	})
 
@@ -130,7 +130,7 @@ func TestDelete(t *testing.T) {
 
 	t.Run("Success Deleting User ID", func(t *testing.T) {
 		err := repo.Delete(int(mockUser.ID))
-		assert.Nil(t, err)
+		assert.Equal(t, nil, err)
 	})
 
 	db.Migrator().DropTable(&entities.User{})
