@@ -6,6 +6,7 @@ import (
 	projectRepo "Project-REST-API/repository/project"
 	userRepo "Project-REST-API/repository/user"
 	"Project-REST-API/utils"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -68,6 +69,7 @@ func TestGet(t *testing.T) {
 	t.Run("Success Getting Task", func(t *testing.T) {
 		res, err := repo.Get()
 		assert.Nil(t, err)
+		fmt.Println(mockTask.Nama, res[0].Nama)
 		assert.Equal(t, mockTask.Nama, res[0].Nama)
 	})
 

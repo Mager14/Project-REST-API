@@ -1,5 +1,17 @@
 mode: set
-<<<<<<< HEAD
+Project-REST-API/delivery/controllers/auth/auth.go:19.42,23.2 1 1
+Project-REST-API/delivery/controllers/auth/auth.go:25.50,26.36 1 1
+Project-REST-API/delivery/controllers/auth/auth.go:26.36,29.46 2 1
+Project-REST-API/delivery/controllers/auth/auth.go:33.3,35.17 2 1
+Project-REST-API/delivery/controllers/auth/auth.go:42.3,44.17 2 1
+Project-REST-API/delivery/controllers/auth/auth.go:51.3,56.5 1 1
+Project-REST-API/delivery/controllers/auth/auth.go:29.46,31.4 1 1
+Project-REST-API/delivery/controllers/auth/auth.go:35.17,40.4 1 1
+Project-REST-API/delivery/controllers/auth/auth.go:44.17,49.4 1 0
+Project-REST-API/delivery/controllers/auth/auth.go:71.56,78.2 6 1
+Project-REST-API/delivery/controllers/auth/auth.go:80.49,83.16 2 0
+Project-REST-API/delivery/controllers/auth/auth.go:89.2,89.10 1 0
+Project-REST-API/delivery/controllers/auth/auth.go:83.16,87.3 3 0
 Project-REST-API/delivery/controllers/task/task.go:18.48,22.2 1 1
 Project-REST-API/delivery/controllers/task/task.go:24.50,25.36 1 1
 Project-REST-API/delivery/controllers/task/task.go:25.36,28.17 2 1
@@ -25,24 +37,6 @@ Project-REST-API/delivery/controllers/task/task.go:87.53,88.36 1 1
 Project-REST-API/delivery/controllers/task/task.go:88.36,93.17 3 1
 Project-REST-API/delivery/controllers/task/task.go:97.3,97.90 1 1
 Project-REST-API/delivery/controllers/task/task.go:93.17,95.4 1 1
-Project-REST-API/delivery/controllers/task/task.go:101.60,102.36 1 0
-Project-REST-API/delivery/controllers/task/task.go:102.36,107.17 3 0
-Project-REST-API/delivery/controllers/task/task.go:111.3,111.87 1 0
-Project-REST-API/delivery/controllers/task/task.go:107.17,109.4 1 0
-=======
-Project-REST-API/delivery/controllers/auth/auth.go:19.42,23.2 1 1
-Project-REST-API/delivery/controllers/auth/auth.go:25.50,26.36 1 1
-Project-REST-API/delivery/controllers/auth/auth.go:26.36,29.46 2 1
-Project-REST-API/delivery/controllers/auth/auth.go:33.3,35.17 2 1
-Project-REST-API/delivery/controllers/auth/auth.go:42.3,44.17 2 1
-Project-REST-API/delivery/controllers/auth/auth.go:51.3,56.5 1 1
-Project-REST-API/delivery/controllers/auth/auth.go:29.46,31.4 1 1
-Project-REST-API/delivery/controllers/auth/auth.go:35.17,40.4 1 1
-Project-REST-API/delivery/controllers/auth/auth.go:44.17,49.4 1 0
-Project-REST-API/delivery/controllers/auth/auth.go:71.56,78.2 6 1
-Project-REST-API/delivery/controllers/auth/auth.go:80.49,83.16 2 0
-Project-REST-API/delivery/controllers/auth/auth.go:89.2,89.10 1 0
-Project-REST-API/delivery/controllers/auth/auth.go:83.16,87.3 3 0
 Project-REST-API/delivery/controllers/project/project.go:17.57,21.2 1 1
 Project-REST-API/delivery/controllers/project/project.go:23.53,24.36 1 1
 Project-REST-API/delivery/controllers/project/project.go:24.36,27.17 2 1
@@ -121,7 +115,7 @@ Project-REST-API/repository/user/user.go:29.70,37.37 3 1
 Project-REST-API/repository/user/user.go:41.2,41.21 1 1
 Project-REST-API/repository/user/user.go:37.37,39.3 1 1
 Project-REST-API/repository/user/user.go:44.80,45.53 1 1
-Project-REST-API/repository/user/user.go:49.2,49.15 1 1
+Project-REST-API/repository/user/user.go:49.2,49.15 1 0
 Project-REST-API/repository/user/user.go:45.53,47.3 1 1
 Project-REST-API/repository/user/user.go:52.92,57.73 3 1
 Project-REST-API/repository/user/user.go:61.2,61.18 1 1
@@ -129,4 +123,19 @@ Project-REST-API/repository/user/user.go:57.73,59.3 1 1
 Project-REST-API/repository/user/user.go:64.52,68.63 2 1
 Project-REST-API/repository/user/user.go:71.2,72.12 2 1
 Project-REST-API/repository/user/user.go:68.63,70.3 1 1
->>>>>>> d7a0ebcbc088e9938439f3d5a38506126d2b1bc2
+Project-REST-API/repository/task/task.go:13.39,17.2 1 1
+Project-REST-API/repository/task/task.go:19.58,22.57 2 1
+Project-REST-API/repository/task/task.go:26.2,26.21 1 1
+Project-REST-API/repository/task/task.go:22.57,24.3 1 0
+Project-REST-API/repository/task/task.go:29.70,32.66 2 1
+Project-REST-API/repository/task/task.go:36.2,36.21 1 0
+Project-REST-API/repository/task/task.go:32.66,34.3 1 1
+Project-REST-API/repository/task/task.go:39.80,40.53 1 1
+Project-REST-API/repository/task/task.go:44.2,44.15 1 1
+Project-REST-API/repository/task/task.go:40.53,42.3 1 1
+Project-REST-API/repository/task/task.go:47.92,52.73 3 1
+Project-REST-API/repository/task/task.go:56.2,56.18 1 0
+Project-REST-API/repository/task/task.go:52.73,54.3 1 1
+Project-REST-API/repository/task/task.go:59.52,63.63 2 1
+Project-REST-API/repository/task/task.go:66.2,67.12 2 0
+Project-REST-API/repository/task/task.go:63.63,65.3 1 1
